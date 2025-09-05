@@ -1,2 +1,54 @@
-# can-parser
-CAN bus message parser
+# CAN bus message parser
+This project is a tool for parsing J1939 CAN bus messages stored in log files.
+It is designed to help developers and engineers analyze raw CAN traffic, decode messages, and work with structured data for further processing or visualization.
+
+## Features
+- Load CAN bus data from files
+- Parse raw frames into structured messages
+- Support for customizable message definitions
+
+## Getting Started
+
+### Prerequisites
+- Python 3.x
+- TBD
+
+### Usage
+- TBD
+
+### Example Input
+Raw CAN log file (CSV-like format), in following format Timestamp [ms], Message ID, Data lenght, Can bus data, Channel:
+
+```
+000000021352 0x18ff08fe 8 000071FFFFFFFFFF ch=2
+000000021353 0x18ff20fe 8 00000000FFFFFFFF ch=2
+000000021353 0x18ff0cfe 8 00F00000FFFFFFFF ch=2
+000000021356 0x18ff08fe 8 010071FFFFFFFFFF ch=1
+000000021357 0x18ff20fe 8 00000000FFFFFFFF ch=1
+```
+
+### Example Output
+- TBD
+ 
+## Project Structure
+```
+.
+├── main.py        # Main file
+├── src/           # Source code
+├── examples/      # Example input files
+├── tests/         # Unit tests
+├── .gitignore
+└── README.md
+```
+
+## Roadmap
+- [ ] First project draft (proof of concept)
+- [ ] Add support for custom CAN message definitions
+- [ ] Add oop
+- [ ] Add GUI
+      
+## Current project status
+Working on first project draft
+
+## Contributing
+Contributions are welcome! Please fork the repository, create a feature branch, and submit a pull request.
