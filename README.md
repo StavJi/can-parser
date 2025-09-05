@@ -17,7 +17,7 @@ It is designed to help developers and engineers analyze raw CAN traffic, decode 
 - TBD
 
 ### Example Input
-Raw CAN log file (CSV-like format), in following format Timestamp [ms], Message ID, Data lenght, Can bus data, Channel:
+Raw CAN log file (CSV-like), in following format Timestamp [ms], Message ID, Data lenght, Can bus data, Channel:
 
 ```
 000000021352 0x18ff08fe 8 000071FFFFFFFFFF ch=2
