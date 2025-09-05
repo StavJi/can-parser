@@ -33,22 +33,22 @@ Raw CAN log file (CSV-like format), in following format Timestamp [ms], Message 
 ## Project Structure
 ```
 .
-├── main.py        # Main file
-├── src/           # Source code
-├── examples/      # Example input files
-├── tests/         # Unit tests
+├── src/             # Source code
+├── examples/        # Example input files
+├── tests/           # Unit tests
+├── requirements.txt # Project dependencies
 ├── .gitignore
 └── README.md
 ```
 
 ## Roadmap
-- [ ] First project draft (proof of concept)
+- [x] First project draft (proof of concept)
 - [ ] Add support for custom CAN message definitions
 - [ ] Add oop
 - [ ] Add GUI
       
 ## Current project status
-Working on first project draft
+Investigating GUI
 
 ## Contributing
 Contributions are welcome! Please fork the repository, create a feature branch, and submit a pull request.
