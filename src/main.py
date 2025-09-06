@@ -1,7 +1,5 @@
-log_path='..//examples//'
-fn='data.TXT'
-
-filename=log_path+fn
+import gui
+from src.gui import gui
 
 from can_log_parser import generator, parse_line_h407_logger
 from frame_parser import (parse_acu_status,
@@ -9,6 +7,11 @@ from frame_parser import (parse_acu_status,
                           parse_tmc2emcu,
                           parse_emcu_status)
 
+
+log_path='..//examples//'
+fn='data.TXT'
+
+filename=log_path+fn
 f = open("output.txt", "w")
 
 gen=generator(filename,parse_line_h407_logger)
@@ -72,3 +75,5 @@ for i in gen:
             frm = parse_emcu_status(channel, payload)
             f.write(f"CH2 status {frm['EMCU_State_2']}")
             f.write('\n')
+
+gui()
