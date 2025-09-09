@@ -1,0 +1,224 @@
+{
+  "ACUmessages": [
+    {
+      "id": "0x00FF07",
+      "alias": "ACUSTATUS",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF0F",
+      "alias": "ACUSTATUS2",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF03",
+      "alias": "ACUSTATUS3",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF0D",
+      "alias": "ACUENGINESTATUS",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF0E",
+      "alias": "ACUENGINESTATUS2",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF21",
+      "alias": "ACUENGINESTATUS3",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF0A",
+      "alias": "ACUERROR",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00EBFF",
+      "alias": "ACUERROR",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF17",
+      "alias": "ACUVERSION",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "0x00FF15",
+      "alias": "ACUTICK",
+      "signals": [
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        },
+        {
+          "name": "TBD",
+          "start_byte": 0,
+          "start_bit": 0,
+          "length": 8,
+          "factor": 1,
+          "unit": "-"
+        }
+      ]
+    }
+  ]
+}
