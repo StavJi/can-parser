@@ -1,4 +1,4 @@
-from src.gui import MyGui
+from gui import CanParserGui
 
 from can_log_parser import generator, parse_line_h407_logger
 from frame_parser import (parse_acu_status,
@@ -16,63 +16,63 @@ f = open("output.txt", "w")
 gen=generator(filename,parse_line_h407_logger)
 
 # This is only temporary
-# for i in gen:
-#     time_s, frame_id, short_id, channel, payload = i
-#     if time_s is not None and short_id is not None:
-#
-#         if short_id == 0x00FF07 and channel == '1': # ACUSTATUS channel 1
-#            frm = parse_acu_status(channel,payload)
-#            f.write(f"Engine1 state: {frm['diesel_state_1_s']}")
-#            f.write(';')
-#            f.write(time_s)
-#            f.write(f"Colling: {frm['cooling_active_1']}")
-#            f.write('\n')
-#
-#
-#         if short_id == 0x00FF07 and channel == '2': # ACUSTATUS channel 1
-#            frm = parse_acu_status(channel,payload)
-#            f.write(f"Engine2 state: {frm['diesel_state_2_s']}")
-#            f.write(';')
-#            f.write(time_s)
-#            f.write(f"Colling: {frm['cooling_active_2']}")
-#            f.write('\n')
-#
-#         if short_id == 0x00FF0C and channel == '1': # EMCUERROR channel 1
-#             frm = parse_emcu_error(channel,payload)
-#             f.write(f"Chrg 1: {frm['Elmot_Charge_Error_1']}")
-#             f.write('\n')
-#             f.write(f"Err 1: {frm['Elmot_Error_1']}")
-#             f.write('\n')
-#
-#         if short_id == 0x00FF0C and channel == '2': # EMCUERROR channel 2
-#             frm = parse_emcu_error(channel,payload)
-#             f.write(f"Chrg 2: {frm['Elmot_Charge_Error_2']}")
-#             f.write('\n')
-#             f.write(f"Err 2: {frm['Elmot_Error_2']}")
-#             f.write('\n')
-#
-#         if short_id == 0x00FF06 and channel == '1': # channel 1
-#             frm = parse_tmc2emcu(channel,payload)
-#             f.write(f"CH1 running {frm['elmot_running_1']}")
-#             f.write('\n')
-#             f.write(f"CH1 charging {frm['elmot_charging_running_1']}")
-#             f.write('\n')
-#
-#         if short_id == 0x00FF06 and channel == '2': # channel 2
-#             frm = parse_tmc2emcu(channel,payload)
-#             f.write(f"CH2 running {frm['elmot_running_2']}")
-#             f.write('\n')
-#             f.write(f"CH2 charging {frm['elmot_charging_running_2']}")
-#             f.write('\n')
-#
-#         if short_id == 0x00FF08 and channel == '1': # channel 1
-#             frm = parse_emcu_status(channel, payload)
-#             f.write(f"CH1 status {frm['EMCU_State_1']}")
-#             f.write('\n')
-#
-#         if short_id == 0x00FF08 and channel == '2': # channel 1
-#             frm = parse_emcu_status(channel, payload)
-#             f.write(f"CH2 status {frm['EMCU_State_2']}")
-#             f.write('\n')
+for i in gen:
+    time_s, frame_id, short_id, channel, payload = i
+    if time_s is not None and short_id is not None:
 
-MyGui()
+        if short_id == 0x00FF07 and channel == '1': # ACUSTATUS channel 1
+           frm = parse_acu_status(channel,payload)
+           f.write(f"Engine1 state: {frm['diesel_state_1_s']}")
+           f.write(';')
+           f.write(time_s)
+           f.write(f"Colling: {frm['cooling_active_1']}")
+           f.write('\n')
+
+
+        if short_id == 0x00FF07 and channel == '2': # ACUSTATUS channel 1
+           frm = parse_acu_status(channel,payload)
+           f.write(f"Engine2 state: {frm['diesel_state_2_s']}")
+           f.write(';')
+           f.write(time_s)
+           f.write(f"Colling: {frm['cooling_active_2']}")
+           f.write('\n')
+
+        if short_id == 0x00FF0C and channel == '1': # EMCUERROR channel 1
+            frm = parse_emcu_error(channel,payload)
+            f.write(f"Chrg 1: {frm['Elmot_Charge_Error_1']}")
+            f.write('\n')
+            f.write(f"Err 1: {frm['Elmot_Error_1']}")
+            f.write('\n')
+
+        if short_id == 0x00FF0C and channel == '2': # EMCUERROR channel 2
+            frm = parse_emcu_error(channel,payload)
+            f.write(f"Chrg 2: {frm['Elmot_Charge_Error_2']}")
+            f.write('\n')
+            f.write(f"Err 2: {frm['Elmot_Error_2']}")
+            f.write('\n')
+
+        if short_id == 0x00FF06 and channel == '1': # channel 1
+            frm = parse_tmc2emcu(channel,payload)
+            f.write(f"CH1 running {frm['elmot_running_1']}")
+            f.write('\n')
+            f.write(f"CH1 charging {frm['elmot_charging_running_1']}")
+            f.write('\n')
+
+        if short_id == 0x00FF06 and channel == '2': # channel 2
+            frm = parse_tmc2emcu(channel,payload)
+            f.write(f"CH2 running {frm['elmot_running_2']}")
+            f.write('\n')
+            f.write(f"CH2 charging {frm['elmot_charging_running_2']}")
+            f.write('\n')
+
+        if short_id == 0x00FF08 and channel == '1': # channel 1
+            frm = parse_emcu_status(channel, payload)
+            f.write(f"CH1 status {frm['EMCU_State_1']}")
+            f.write('\n')
+
+        if short_id == 0x00FF08 and channel == '2': # channel 1
+            frm = parse_emcu_status(channel, payload)
+            f.write(f"CH2 status {frm['EMCU_State_2']}")
+            f.write('\n')
+
+CanParserGui()

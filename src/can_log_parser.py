@@ -1,60 +1,60 @@
 import os
 from datetime import datetime
 
-short_tmc_commands_ids = {
-    0x00FF05: 'TMC2ACU',
-    0x00FF06: 'TMC2EMCU',
-    0x00FF07: 'ACUSTATUS',
-    0x00FF08: 'EMCUSTATUS',
-    0x00FF09: 'TMCSTATUS',
-    0x00FF0A: 'ACUERROR',
-    0x00FF0C: 'EMCUERROR',
-    0x00FF0D: 'ACUENGINESTATUS',
-    0x00FF0E: 'ACUENGINESTATUS2',
-    0x00FF0F: 'ACUSTATUS2',
-    0x00FF10: 'TMCSTATU2',
-    0x00FF14: 'TMCSTATU5'
-}
+# short_tmc_commands_ids = {
+#     0x00FF05: 'TMC2ACU',
+#     0x00FF06: 'TMC2EMCU',
+#     0x00FF07: 'ACUSTATUS',
+#     0x00FF08: 'EMCUSTATUS',
+#     0x00FF09: 'TMCSTATUS',
+#     0x00FF0A: 'ACUERROR',
+#     0x00FF0C: 'EMCUERROR',
+#     0x00FF0D: 'ACUENGINESTATUS',
+#     0x00FF0E: 'ACUENGINESTATUS2',
+#     0x00FF0F: 'ACUSTATUS2',
+#     0x00FF10: 'TMCSTATU2',
+#     0x00FF14: 'TMCSTATU5'
+# }
+#
+#
+# acu_frames = [
+#               0x00FF07, # ACUSTATUS
+#               0x00FF0F, # ACUSTATUS2
+#               0x00FF03, # ACUSTATUS3
+#               0x00FF0D, # ACUENGINESTATUS
+#               0x00FF0E, # ACUENGINESTATUS2
+#               0x00FF21, # ACUENGINESTATUS3
+#               0x00FF0A, # ACUERROR
+#               0x00EBFF, # ACUERROR
+#               0x00FF17, # ACUVERSION
+#               0x00FF15  # ACUTICK
+#              ]
+#
+# tmc_frames = [
+#               0x00FF09, # TMCSTATUS
+#               0x00FF10, # TMCSTATUS2
+#               0x00FF11, # TMCSTATUS3
+#               0x00FF12, # TMCSTATUS4
+#               0x00FF14, # TMCSTATUS5
+#               0x00FF05, # TMC2ACU
+#               0x00FF06, # TMC2EMCU
+#               0x00FF46  # SYSIDENT
+#               ]
+#
+# emcu_frames = [
+#               0x00FF08, # EMCUSTATUS
+#               0x00FF0C, # EMCUERROR
+#               0x00FF18  # EMCUVERSION
+#               ]
 
-
-acu_frames = [
-              0x00FF07, # ACUSTATUS
-              0x00FF0F, # ACUSTATUS2
-              0x00FF03, # ACUSTATUS3
-              0x00FF0D, # ACUENGINESTATUS
-              0x00FF0E, # ACUENGINESTATUS2
-              0x00FF21, # ACUENGINESTATUS3
-              0x00FF0A, # ACUERROR
-              0x00EBFF, # ACUERROR
-              0x00FF17, # ACUVERSION
-              0x00FF15  # ACUTICK
-             ]
-
-tmc_frames = [
-              0x00FF09, # TMCSTATUS
-              0x00FF10, # TMCSTATUS2
-              0x00FF11, # TMCSTATUS3
-              0x00FF12, # TMCSTATUS4
-              0x00FF14, # TMCSTATUS5
-              0x00FF05, # TMC2ACU
-              0x00FF06, # TMC2EMCU
-              0x00FF46  # SYSIDENT
-              ]
-
-emcu_frames = [
-              0x00FF08, # EMCUSTATUS
-              0x00FF0C, # EMCUERROR
-              0x00FF18  # EMCUVERSION
-              ] 
-
-def is_tmc_frame(short_id):
-    return short_id in tmc_frames
-
-def is_acu_frame(short_id):
-    return short_id in acu_frames
-
-def is_emcu_frame(short_id):
-    return short_id in emcu_frames
+# def is_tmc_frame(short_id):
+#     return short_id in tmc_frames
+#
+# def is_acu_frame(short_id):
+#     return short_id in acu_frames
+#
+# def is_emcu_frame(short_id):
+#     return short_id in emcu_frames
 
 def extract_escaped(payload):
     out=""

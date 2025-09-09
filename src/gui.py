@@ -1,62 +1,105 @@
 import tkinter as tk
-from tkinter import messagebox
-import sv_ttk
+from tkinter import messagebox, filedialog
+import tkinter.font as tkFont
 
-class MyGui:
+class CanParserGui:
     def __init__(self):
+        self.filepath = None # File path selected by user
+
         self.root = tk.Tk()
+        self.root.geometry("300x110")
+        self.root.title("CAN bus parser")
+
+        btn_font = tkFont.Font(family="Arial", size=12, weight="bold")
+        self.button_bg = "#55165E"  # Purple background
+        self.button_fg = "white"    # White text
+
+        # Button for file selection
+        self.open_button = tk.Button(self.root, text="Open File", font=btn_font, bg=self.button_bg,
+                                     fg=self.button_fg, width = 15, command=self.open_file)
+
+        self.open_button.pack(padx = 10 , pady = 10)
+
 
         self.menu_bar = tk.Menu(self.root)
         self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.file_menu.add_command(label="Close", command=self.on_closing)
-        self.file_menu.add_separator()
-        self.file_menu.add_command(label="Close without question", command=exit)
+        self.file_menu.add_command(label="Close", command=exit)
 
         self.action_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.action_menu.add_command(label='Show Message', command=self.show_message)
+        self.action_menu.add_command(label='About', command=self.show_about)
 
         self.menu_bar.add_cascade(menu=self.file_menu, label="File")
-        self.menu_bar.add_cascade(menu=self.action_menu, label="Action")
+        self.menu_bar.add_cascade(menu=self.action_menu, label="About")
 
         self.root.config(menu=self.menu_bar)
 
-        self.label = tk.Label(self.root, text = 'Hello World', font = ('Arial', 18))
-        self.label.pack(padx = 10 , pady = 10)
+        # Button analyze
+        self.analyze_button = tk.Button(self.root, text="Analyze", font=btn_font, bg=self.button_bg,
+                                        fg=self.button_fg, width = 15, command=self.analyze_file)
 
-        self.textbox = tk.Text(self.root, font = ('Arial', 16))
-        self.textbox.bind("<KeyPress>", self.shortcut)
-        self.textbox.pack(padx = 10 , pady = 10)
+        self.analyze_button.pack(padx = 10 , pady = 10)
 
-        self.check_state = tk.IntVar()
-
-        self.check = tk.Checkbutton(self.root, text = "Show message", font = ('Arial', 16), variable = self.check_state)
-        self.check.pack(padx = 10 , pady = 10)
-
-        self.button = tk.Button(self.root, text = 'Msg', font = ('Arial', 18), command = self.show_message)
-        self.button.pack(padx = 10 , pady = 10)
-
-        self.clear_btn = tk.Button(self.root, text='Clear', font=('Arial', 18), command = self.clear)
-        self.clear_btn.pack(padx = 10 , pady = 10)
+        # self.textbox = tk.Text(self.root, font = ('Arial', 16))
+        # self.textbox.bind("<KeyPress>", self.shortcut)
+        # self.textbox.pack(padx = 10 , pady = 10)
+        #
+        # self.check_state = tk.IntVar()
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root.mainloop()
 
-    def show_message(self):
-        if self.check_state.get() == 0:
-            print(self.textbox.get('1.0', tk.END))
-        else:
-            messagebox.showinfo(title="Message", message=self.textbox.get('1.0', tk.END))
+    # def shortcut(self, event):
+    #     if event.state == 12 and event.keysym == "Return":
+    #         self.show_message()
 
-    def shortcut(self, event):
-        if event.state == 12 and event.keysym == "Return":
-            self.show_message()
+    # def clear(self):
+    #     self.textbox.delete('1.0', tk.END)
+
+    def show_about(self):
+        messagebox.showinfo("About","CAN Bus parser developed in 2025.\n"
+                                                 "Final project of the Python Developer course.")
 
     def on_closing(self):
         if messagebox.askyesno(title='Quit?', message='Do you really want to quit?'):
             self.root.destroy()
 
-    def clear(self):
-        self.textbox.delete('1.0', tk.END)
+    def open_file(self):
+        self.filepath = filedialog.askopenfilename( title="Choose file to analyze",
+                                                    filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
+        if self.filepath:
+            messagebox.showinfo("File Selected", f"File: {self.filepath}")
+
+    def analyze_file(self):
+        ...
+        # if not self.filepath:
+        #     messagebox.showwarning("Chyba", "Nejdřív vyber soubor.")
+        #     return
+        #
+        # selection = self.listbox.curselection()
+        # if not selection:
+        #     messagebox.showwarning("Chyba", "Vyber jednu možnost z nabídky.")
+        #     return
+        #
+        # option = self.options[selection[0]]
+        #
+        # try:
+        #     with open(self.filepath, "r", encoding="utf-8") as f:
+        #         content = f.read()
+        # except Exception as e:
+        #     messagebox.showerror("Chyba", f"Nepodařilo se načíst soubor:\n{e}")
+        #     return
+        #
+        # if option == "Počet řádků":
+        #     result = f"Soubor má {content.count(chr(10)) + 1} řádků."
+        # elif option == "Počet slov":
+        #     result = f"Soubor má {len(content.split())} slov."
+        # elif option == "Počet znaků":
+        #     result = f"Soubor má {len(content)} znaků."
+        # else:
+        #     result = "Neznámá možnost."
+        #
+        # self.result_label.config(text=result)
+
 
 # def toggle_theme():
 #     if sv_ttk.get_theme() == "dark":
