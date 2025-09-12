@@ -21,6 +21,8 @@ It is designed to help developers and engineers analyze raw CAN traffic, decode 
 - Run application 
    ```bash
    python main.py
+- Select file to parse
+- Enjoy!
 
 ### Example Input
 Raw CAN log file (CSV-like), in following format Timestamp [ms], Message ID, Data lenght, Can bus data, Channel:
