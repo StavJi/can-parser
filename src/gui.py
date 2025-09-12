@@ -35,7 +35,7 @@ class CanParserGui:
 
         # Button analyze
         self.analyze_button = tk.Button(self.root, text="Analyze", font=btn_font, bg=self.button_bg,
-                                        fg=self.button_fg, width = 15, command=self.analyze_file)
+                                        fg=self.button_fg, width = 15)
 
         self.analyze_button.pack(padx = 10 , pady = 10)
 
@@ -46,7 +46,9 @@ class CanParserGui:
         # self.check_state = tk.IntVar()
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
-        self.root.mainloop()
+
+        # mainloop will run from main.py
+        # self.root.mainloop()
 
     # def shortcut(self, event):
     #     if event.state == 12 and event.keysym == "Return":
@@ -69,8 +71,7 @@ class CanParserGui:
         if self.filepath:
             messagebox.showinfo("File Selected", f"File: {self.filepath}")
 
-    def analyze_file(self):
-        ...
+    #def analyze_file(self):
         # if not self.filepath:
         #     messagebox.showwarning("Chyba", "Nejdřív vyber soubor.")
         #     return
