@@ -11,10 +11,16 @@ It is designed to help developers and engineers analyze raw CAN traffic, decode 
 
 ### Prerequisites
 - Python 3.x
-- TBD
+- Dependency management via `requirements.txt` file  
 
 ### Usage
-- TBD
+- Clone the repository
+- Install dependencies
+    ```bash
+    pip install -r requirements.txt
+- Run application 
+   ```bash
+   python main.py
 
 ### Example Input
 Raw CAN log file (CSV-like), in following format Timestamp [ms], Message ID, Data lenght, Can bus data, Channel:
@@ -44,11 +50,11 @@ Raw CAN log file (CSV-like), in following format Timestamp [ms], Message ID, Dat
 ## Roadmap
 - [x] First project draft (proof of concept)
 - [ ] Add support for custom CAN message definitions
-- [ ] Add oop
-- [ ] Add GUI
+- [x] Add oop
+- [x] Add GUI
       
 ## Current project status
-Investigating GUI
+Make it more useful and less annoying to use
 
 ## Contributing
 Contributions are welcome! Please fork the repository, create a feature branch, and submit a pull request.
