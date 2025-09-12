@@ -7,20 +7,28 @@ class CanParserGui:
         self.filepath = None # File path selected by user
 
         self.root = tk.Tk()
-        self.root.geometry("300x110")
+        self.root.geometry("800x110")
         self.root.title("CAN bus parser")
 
         btn_font = tkFont.Font(family="Arial", size=12, weight="bold")
         self.button_bg = "#55165E"  # Purple background
         self.button_fg = "white"    # White text
 
+        # Frame for button and label
+        top_frame = tk.Frame(self.root)
+        # enchor e => east, w => west
+        top_frame.pack(padx=10, pady=10, anchor="w")
+
         # Button for file selection
-        self.open_button = tk.Button(self.root, text="Open File", font=btn_font, bg=self.button_bg,
+        self.open_button = tk.Button(top_frame, text="Open File", font=btn_font, bg=self.button_bg,
                                      fg=self.button_fg, width = 15, command=self.open_file)
+        self.open_button.pack(side = "left")
 
-        self.open_button.pack(padx = 10 , pady = 10)
+        # Path label next to button open
+        self.path_label = tk.Label(top_frame, text="No file selected", font=('Arial', 10))
+        self.path_label.pack(padx = 10 , side = "left")
 
-
+        # Menu
         self.menu_bar = tk.Menu(self.root)
         self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.file_menu.add_command(label="Close", command=exit)
@@ -37,7 +45,7 @@ class CanParserGui:
         self.analyze_button = tk.Button(self.root, text="Analyze", font=btn_font, bg=self.button_bg,
                                         fg=self.button_fg, width = 15)
 
-        self.analyze_button.pack(padx = 10 , pady = 10)
+        self.analyze_button.pack(padx = 10 , pady = 10, anchor="w")
 
         # self.textbox = tk.Text(self.root, font = ('Arial', 16))
         # self.textbox.bind("<KeyPress>", self.shortcut)
@@ -69,7 +77,7 @@ class CanParserGui:
         self.filepath = filedialog.askopenfilename( title="Choose file to analyze",
                                                     filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
         if self.filepath:
-            messagebox.showinfo("File Selected", f"File: {self.filepath}")
+            self.path_label.config(text=self.filepath)
 
     #def analyze_file(self):
         # if not self.filepath:
