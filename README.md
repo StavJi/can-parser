@@ -20,7 +20,7 @@ It is designed to help developers and engineers analyze raw CAN traffic, decode 
     pip install -r requirements.txt
 - Run application 
    ```bash
-   python main.py
+   python src/main.py
 - Select file to parse
 - Enjoy!
 
