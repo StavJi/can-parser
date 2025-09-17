@@ -1,4 +1,6 @@
+import os
 from gui import CanParserGui
+from tkinter import messagebox
 
 from can_log_parser import CanLogParser
 from frame_parser import FrameParser
@@ -75,12 +77,21 @@ if __name__ == "__main__":
     # Bind analyze_button to run parser
     def analyze_wrapper():
         if not app.filepath:
-            from tkinter import messagebox
             messagebox.showwarning("Warning", "Choose file!")
             return
-        run_parser(app.filepath)
-        from tkinter import messagebox
-        messagebox.showinfo("Done", f"See output.txt")
+
+        # Check path if exists
+        if not os.path.isfile(app.filepath):
+            messagebox.showerror("Error", f"File does not exist:\n{app.filepath}")
+            return
+
+        try:
+            run_parser(app.filepath)
+            messagebox.showinfo("Done", "See output.txt")
+        except Exception as e:
+            # Parsing error
+            messagebox.showerror("Error", f"Parsing failed:\n{e}")
+
 
     app.analyze_button.config(command=analyze_wrapper)
 
