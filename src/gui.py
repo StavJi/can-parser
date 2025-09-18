@@ -12,7 +12,7 @@ class CanParserGui:
         self.filepath = None # File path selected by user
 
         self.root = tk.Tk()
-        self.root.geometry("800x250")
+        self.root.geometry("800x700")
         self.root.title("CAN bus parser")
 
         btn_font = tkFont.Font(family="Arial", size=12, weight="bold")
@@ -36,6 +36,31 @@ class CanParserGui:
         self.menu_bar.add_cascade(menu=self.action_menu, label="About")
 
         self.root.config(menu=self.menu_bar)
+
+        self.check_vars = {
+            "TMCSTATUS": tk.BooleanVar(value=True),
+            "TMCSTATUS2": tk.BooleanVar(value=True),
+            "TMCSTATUS3": tk.BooleanVar(value=True),
+            "TMCSTATUS4": tk.BooleanVar(value=True),
+            "TMCSTATUS5": tk.BooleanVar(value=True),
+            "TMC2ACU": tk.BooleanVar(value=True),
+            "TMC2EMCU": tk.BooleanVar(value=True),
+            "ACUSTATUS": tk.BooleanVar(value=True),
+            "ACUSTATUS2": tk.BooleanVar(value=True),
+            "ACUSTATUS3": tk.BooleanVar(value=True),
+            "ENGINESTATUS": tk.BooleanVar(value=True),
+            "ENGINESTATUS2": tk.BooleanVar(value=True),
+            "ACUERROR": tk.BooleanVar(value=True),
+            "EMCUSTATUS": tk.BooleanVar(value=True),
+            "EMCUERROR": tk.BooleanVar(value=True),
+            "ACUDIAGNOSTICS2": tk.BooleanVar(value=True),
+        }
+
+        checkbox_frame = tk.LabelFrame(self.root, text="Select frames to parse", font=btn_font)
+        checkbox_frame.pack(padx=10, pady=5, anchor="w")
+
+        for name, var in self.check_vars.items():
+            tk.Checkbutton(checkbox_frame, text=name, variable=var).pack(anchor="w")
 
         # Button analyze
         self.analyze_button = tk.Button(self.root, text="Analyze", font=btn_font, bg=self.button_bg,
