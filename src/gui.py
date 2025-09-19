@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog
-import tkinter.font as tkFont
+import tkinter.font as tk_font
 
 
 def show_about():
@@ -15,7 +15,7 @@ class CanParserGui:
         self.root.geometry("800x1200")
         self.root.title("CAN bus parser")
 
-        btn_font = tkFont.Font(family="Arial", size=12, weight="bold")
+        btn_font = tk_font.Font(family="Arial", size=12, weight="bold")
         self.button_bg = "#55165E"  # Purple background
         self.button_fg = "white"    # White text
 
