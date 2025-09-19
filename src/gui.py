@@ -12,7 +12,7 @@ class CanParserGui:
         self.filepath = None # File path selected by user
 
         self.root = tk.Tk()
-        self.root.geometry("800x700")
+        self.root.geometry("800x1200")
         self.root.title("CAN bus parser")
 
         btn_font = tkFont.Font(family="Arial", size=12, weight="bold")
@@ -38,22 +38,38 @@ class CanParserGui:
         self.root.config(menu=self.menu_bar)
 
         self.check_vars = {
-            "TMCSTATUS": tk.BooleanVar(value=True),
-            "TMCSTATUS2": tk.BooleanVar(value=True),
-            "TMCSTATUS3": tk.BooleanVar(value=True),
-            "TMCSTATUS4": tk.BooleanVar(value=True),
-            "TMCSTATUS5": tk.BooleanVar(value=True),
-            "TMC2ACU": tk.BooleanVar(value=True),
-            "TMC2EMCU": tk.BooleanVar(value=True),
-            "ACUSTATUS": tk.BooleanVar(value=True),
-            "ACUSTATUS2": tk.BooleanVar(value=True),
-            "ACUSTATUS3": tk.BooleanVar(value=True),
-            "ENGINESTATUS": tk.BooleanVar(value=True),
-            "ENGINESTATUS2": tk.BooleanVar(value=True),
-            "ACUERROR": tk.BooleanVar(value=True),
-            "EMCUSTATUS": tk.BooleanVar(value=True),
-            "EMCUERROR": tk.BooleanVar(value=True),
-            "ACUDIAGNOSTICS2": tk.BooleanVar(value=True),
+            "TMCSTATUS_CH1": tk.BooleanVar(value=True),
+            "TMCSTATUS_CH2": tk.BooleanVar(value=False),
+            "TMCSTATUS2_CH1": tk.BooleanVar(value=False),
+            "TMCSTATUS2_CH2": tk.BooleanVar(value=False),
+            "TMCSTATUS3_CH1": tk.BooleanVar(value=False),
+            "TMCSTATUS3_CH2": tk.BooleanVar(value=False),
+            "TMCSTATUS4_CH1": tk.BooleanVar(value=False),
+            "TMCSTATUS4_CH2": tk.BooleanVar(value=False),
+            "TMCSTATUS5_CH1": tk.BooleanVar(value=False),
+            "TMCSTATUS5_CH2": tk.BooleanVar(value=False),
+            "TMC2ACU_CH1": tk.BooleanVar(value=False),
+            "TMC2ACU_CH2": tk.BooleanVar(value=False),
+            "TMC2EMCU_CH1": tk.BooleanVar(value=False),
+            "TMC2EMCU_CH2": tk.BooleanVar(value=False),
+            "ACUSTATUS_CH1": tk.BooleanVar(value=False),
+            "ACUSTATUS_CH2": tk.BooleanVar(value=False),
+            "ACUSTATUS2_CH1": tk.BooleanVar(value=False),
+            "ACUSTATUS2_CH2": tk.BooleanVar(value=False),
+            "ACUSTATUS3_CH1": tk.BooleanVar(value=False),
+            "ACUSTATUS3_CH2": tk.BooleanVar(value=False),
+            "ENGINESTATUS_CH1": tk.BooleanVar(value=False),
+            "ENGINESTATUS_CH2": tk.BooleanVar(value=False),
+            "ENGINESTATUS2_CH1": tk.BooleanVar(value=False),
+            "ENGINESTATUS2_CH2": tk.BooleanVar(value=False),
+            "ACUERROR_CH1": tk.BooleanVar(value=False),
+            "ACUERROR_CH2": tk.BooleanVar(value=False),
+            "EMCUSTATUS_CH1": tk.BooleanVar(value=False),
+            "EMCUSTATUS_CH2": tk.BooleanVar(value=False),
+            "EMCUERROR_CH1": tk.BooleanVar(value=False),
+            "EMCUERROR_CH2": tk.BooleanVar(value=False),
+            "ACUDIAGNOSTICS2_CH1": tk.BooleanVar(value=False),
+            "ACUDIAGNOSTICS2_CH2": tk.BooleanVar(value=False),
         }
 
         checkbox_frame = tk.LabelFrame(self.root, text="Select frames to parse", font=btn_font)
