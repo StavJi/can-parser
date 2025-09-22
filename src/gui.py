@@ -8,11 +8,12 @@ def show_about():
                                              "Final project of the Python Developer course.")
 
 class CanParserGui:
-    def __init__(self):
+    def __init__(self, can_bus_channel_count: int):
+        self.channels_count = can_bus_channel_count
         self.filepath = None # File path selected by user
 
         self.root = tk.Tk()
-        self.root.geometry("800x1200")
+        self.root.geometry("700x800")
         self.root.title("CAN bus parser")
 
         btn_font = tk_font.Font(family="Arial", size=12, weight="bold")
@@ -37,46 +38,50 @@ class CanParserGui:
 
         self.root.config(menu=self.menu_bar)
 
-        self.check_vars = {
-            "TMCSTATUS_CH1": tk.BooleanVar(value=True),
-            "TMCSTATUS_CH2": tk.BooleanVar(value=False),
-            "TMCSTATUS2_CH1": tk.BooleanVar(value=False),
-            "TMCSTATUS2_CH2": tk.BooleanVar(value=False),
-            "TMCSTATUS3_CH1": tk.BooleanVar(value=False),
-            "TMCSTATUS3_CH2": tk.BooleanVar(value=False),
-            "TMCSTATUS4_CH1": tk.BooleanVar(value=False),
-            "TMCSTATUS4_CH2": tk.BooleanVar(value=False),
-            "TMCSTATUS5_CH1": tk.BooleanVar(value=False),
-            "TMCSTATUS5_CH2": tk.BooleanVar(value=False),
-            "TMC2ACU_CH1": tk.BooleanVar(value=False),
-            "TMC2ACU_CH2": tk.BooleanVar(value=False),
-            "TMC2EMCU_CH1": tk.BooleanVar(value=False),
-            "TMC2EMCU_CH2": tk.BooleanVar(value=False),
-            "ACUSTATUS_CH1": tk.BooleanVar(value=False),
-            "ACUSTATUS_CH2": tk.BooleanVar(value=False),
-            "ACUSTATUS2_CH1": tk.BooleanVar(value=False),
-            "ACUSTATUS2_CH2": tk.BooleanVar(value=False),
-            "ACUSTATUS3_CH1": tk.BooleanVar(value=False),
-            "ACUSTATUS3_CH2": tk.BooleanVar(value=False),
-            "ENGINESTATUS_CH1": tk.BooleanVar(value=False),
-            "ENGINESTATUS_CH2": tk.BooleanVar(value=False),
-            "ENGINESTATUS2_CH1": tk.BooleanVar(value=False),
-            "ENGINESTATUS2_CH2": tk.BooleanVar(value=False),
-            "ACUERROR_CH1": tk.BooleanVar(value=False),
-            "ACUERROR_CH2": tk.BooleanVar(value=False),
-            "EMCUSTATUS_CH1": tk.BooleanVar(value=False),
-            "EMCUSTATUS_CH2": tk.BooleanVar(value=False),
-            "EMCUERROR_CH1": tk.BooleanVar(value=False),
-            "EMCUERROR_CH2": tk.BooleanVar(value=False),
-            "ACUDIAGNOSTICS2_CH1": tk.BooleanVar(value=False),
-            "ACUDIAGNOSTICS2_CH2": tk.BooleanVar(value=False),
-        }
+        # Frame checkbox selector
+        frame_selector = tk.LabelFrame(
+            self.root,
+            text="Select frames to parse",
+            font=("Arial", 12, "bold")
+        )
+        frame_selector.pack(padx=10, pady=10, anchor="w")
 
-        checkbox_frame = tk.LabelFrame(self.root, text="Select frames to parse", font=btn_font)
-        checkbox_frame.pack(padx=10, pady=5, anchor="w")
+        # Head of the frame
+        for ch in range(1, can_bus_channel_count + 1):
+            tk.Label(frame_selector, text=f"CH{ch}", font=("Arial", 10, "bold")).grid(row=0, column=ch, padx=5, pady=5)
 
-        for name, var in self.check_vars.items():
-            tk.Checkbutton(checkbox_frame, text=name, variable=var).pack(anchor="w")
+        # Available frames to parse
+        frames = [
+            "TMCSTATUS",
+            "TMCSTATUS2",
+            "TMCSTATUS3",
+            "TMCSTATUS4",
+            "TMCSTATUS5",
+            "TMC2ACU",
+            "TMC2EMCU",
+            "ACUSTATUS",
+            "ACUSTATUS2",
+            "ACUSTATUS3",
+            "ENGINESTATUS",
+            "ENGINESTATUS2",
+            "ACUERROR",
+            "EMCUSTATUS",
+            "EMCUERROR",
+            "ACUDIAGNOSTICS2"
+        ]
+
+        self.check_vars = {}
+
+        for row, fr in enumerate(frames, start=1):
+            # Create column with frame name
+            tk.Label(frame_selector, text=fr).grid(row=row, column=0, sticky="w", padx=5, pady=2)
+
+            for ch in range(1, can_bus_channel_count + 1):
+                key = f"{fr}_CH{ch}"
+                self.check_vars[key] = tk.BooleanVar(value=False)
+
+                chk = tk.Checkbutton(frame_selector, variable=self.check_vars[key])
+                chk.grid(row=row, column=ch, padx=5, pady=2)
 
         # Button analyze
         self.analyze_button = tk.Button(self.root, text="Analyze", font=btn_font, bg=self.button_bg,
