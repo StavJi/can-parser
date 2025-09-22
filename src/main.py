@@ -1,5 +1,4 @@
 import os
-import configparser
 from gui import CanParserGui
 
 from can_log_parser import CanLogParser
@@ -72,9 +71,7 @@ def run_parser(filename: str, selected_frames, output_file: str = "output.txt"):
 
 if __name__ == "__main__":
     # Gui
-    config = configparser.ConfigParser()
-    config.read("config/cfg.ini")
-    app = CanParserGui(config['DEFAULT'].getint('CanBusChannels'))
+    app = CanParserGui()
 
     # Bind analyze_button to run parser
     def analyze_wrapper():

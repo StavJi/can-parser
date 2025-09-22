@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog
 import tkinter.font as tk_font
+import configparser
 
 
 def show_about():
@@ -8,9 +9,13 @@ def show_about():
                                              "Final project of the Python Developer course.")
 
 class CanParserGui:
-    def __init__(self, can_bus_channel_count: int):
-        self.channels_count = can_bus_channel_count
-        self.filepath = None # File path selected by user
+    def __init__(self):
+        self.filepath = None  # File path selected by user
+        self.config_path = "config/cfg.ini"
+
+        config = configparser.ConfigParser()
+        config.read(self.config_path)
+        self.can_bus_channel_count = config['DEFAULT'].getint('CanBusChannels', fallback = 1)
 
         self.root = tk.Tk()
         self.root.geometry("700x800")
@@ -47,7 +52,7 @@ class CanParserGui:
         frame_selector.pack(padx=10, pady=10, anchor="w")
 
         # Head of the frame
-        for ch in range(1, can_bus_channel_count + 1):
+        for ch in range(1, self.can_bus_channel_count + 1):
             tk.Label(frame_selector, text=f"CH{ch}", font=("Arial", 10, "bold")).grid(row=0, column=ch, padx=5, pady=5)
 
         # Available frames to parse
@@ -76,7 +81,7 @@ class CanParserGui:
             # Create column with frame name
             tk.Label(frame_selector, text=fr).grid(row=row, column=0, sticky="w", padx=5, pady=2)
 
-            for ch in range(1, can_bus_channel_count + 1):
+            for ch in range(1, self.can_bus_channel_count + 1):
                 key = f"{fr}_CH{ch}"
                 self.check_vars[key] = tk.BooleanVar(value=False)
 
@@ -98,6 +103,30 @@ class CanParserGui:
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
+    def save_selection(self):
+        """ Save selected CAN bus frames """
+        config = configparser.ConfigParser()
+        config.read(self.config_path)
+
+        if "Frames" not in config:
+            config["Frames"] = {}
+
+        for key, var in self.check_vars.items():
+            config["Frames"][key] = str(var.get())
+
+        with open(self.config_path, "w") as f:
+            config.write(f)
+
+    def load_selection(self):
+        """ Load last selected CAN bus frames from config """
+        config = configparser.ConfigParser()
+        config.read(self.config_path)
+
+        if "Frames" in config:
+            for key, var in self.check_vars.items():
+                if key in config["Frames"]:
+                    var.set(config.getboolean("Frames", key))
+
     def log(self, message: str):
         """ Add log message to log """
         self.log_text.config(state="normal")
@@ -106,6 +135,7 @@ class CanParserGui:
         self.log_text.config(state="disabled")
 
     def on_closing(self):
+        self.save_selection() # Save selected frames
         if messagebox.askyesno(title='Quit?', message='Do you really want to quit?'):
             self.root.destroy()
 
