@@ -88,6 +88,9 @@ class CanParserGui:
                 chk = tk.Checkbutton(frame_selector, variable=self.check_vars[key])
                 chk.grid(row=row, column=ch, padx=5, pady=2)
 
+
+        self.load_selection() # Load last selected frames from config
+
         # Button analyze
         self.analyze_button = tk.Button(self.root, text="Analyze", font=btn_font, bg=self.button_bg,
                                         fg=self.button_fg, width = 15)
@@ -105,6 +108,8 @@ class CanParserGui:
 
     def save_selection(self):
         """ Save selected CAN bus frames """
+        #self.log("Saving selected CAN bus frames")
+
         config = configparser.ConfigParser()
         config.read(self.config_path)
 
@@ -119,6 +124,8 @@ class CanParserGui:
 
     def load_selection(self):
         """ Load last selected CAN bus frames from config """
+        #self.log("Loading last selected CAN bus frames")
+
         config = configparser.ConfigParser()
         config.read(self.config_path)
 
