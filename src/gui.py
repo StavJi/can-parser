@@ -71,8 +71,6 @@ class CanParserGui:
                 chk = tk.Checkbutton(frame_selector, variable=self.check_vars[key])
                 chk.grid(row=row, column=ch, padx=5, pady=2)
 
-        self.load_selection() # Load last selected frames from config
-
         # Button analyze
         self.analyze_button = tk.Button(self.root, text="Analyze", font=btn_font, bg=self.button_bg,
                                         fg=self.button_fg, width = 15)
@@ -86,11 +84,15 @@ class CanParserGui:
         self.log_text = tk.Text(log_frame, height=8, font=('Consolas', 10), state="disabled", bg="#f5f5f5")
         self.log_text.pack(fill="both", expand=True)
 
+        # Load last selected frames from config
+        self.load_selection() # This needs to be called after all checkboxes for frames are created
+                              # and after log area is created
+
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def save_selection(self):
         """ Save selected CAN bus frames """
-        #self.log("Saving selected CAN bus frames")
+        self.log("Saving selected frames:")
 
         config = configparser.ConfigParser()
         config.read(self.config_path)
@@ -100,13 +102,15 @@ class CanParserGui:
 
         for key, var in self.check_vars.items():
             config["Frames"][key] = str(var.get())
+            if var.get():
+                self.log(f"{key}")
 
         with open(self.config_path, "w") as f:
             config.write(f)
 
     def load_selection(self):
         """ Load last selected CAN bus frames from config """
-        #self.log("Loading last selected CAN bus frames")
+        self.log("Loading last selected frames:")
 
         config = configparser.ConfigParser()
         config.read(self.config_path)
@@ -115,6 +119,9 @@ class CanParserGui:
             for key, var in self.check_vars.items():
                 if key in config["Frames"]:
                     var.set(config.getboolean("Frames", key))
+
+                    if var.get():
+                        self.log(f"{key}")
 
     def log(self, message: str):
         """ Add log message to log """
