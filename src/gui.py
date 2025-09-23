@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 import tkinter.font as tk_font
 import configparser
-
+from frame_selector import FrameSelector
 
 def show_about():
     messagebox.showinfo("About","CAN Bus parser developed in 2025.\n"
@@ -55,27 +55,9 @@ class CanParserGui:
         for ch in range(1, self.can_bus_channel_count + 1):
             tk.Label(frame_selector, text=f"CH{ch}", font=("Arial", 10, "bold")).grid(row=0, column=ch, padx=5, pady=5)
 
-        # TODO take this from parser or selector, do not hardcode this
         # Available frames to parse
-        frames = [
-            "TMCSTATUS",
-            "TMCSTATUS2",
-            "TMCSTATUS3",
-            "TMCSTATUS4",
-            "TMCSTATUS5",
-            "TMC2ACU",
-            "TMC2EMCU",
-            "ACUSTATUS",
-            "ACUSTATUS2",
-            "ACUSTATUS3",
-            "ENGINESTATUS",
-            "ENGINESTATUS2",
-            "ACUERROR",
-            "EMCUSTATUS",
-            "EMCUERROR",
-            "ACUDIAGNOSTICS2"
-        ]
-
+        # Take available frames from frame_selector.py
+        frames = [handler.name for handler in FrameSelector.HANDLERS]
         self.check_vars = {}
 
         for row, fr in enumerate(frames, start=1):
@@ -88,7 +70,6 @@ class CanParserGui:
 
                 chk = tk.Checkbutton(frame_selector, variable=self.check_vars[key])
                 chk.grid(row=row, column=ch, padx=5, pady=2)
-
 
         self.load_selection() # Load last selected frames from config
 
