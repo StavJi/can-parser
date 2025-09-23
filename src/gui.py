@@ -55,6 +55,7 @@ class CanParserGui:
         for ch in range(1, self.can_bus_channel_count + 1):
             tk.Label(frame_selector, text=f"CH{ch}", font=("Arial", 10, "bold")).grid(row=0, column=ch, padx=5, pady=5)
 
+        # TODO take this from parser or selector, do not hardcode this
         # Available frames to parse
         frames = [
             "TMCSTATUS",
