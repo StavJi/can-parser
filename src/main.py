@@ -1,5 +1,6 @@
 import os
 from gui import CanParserGui
+import requests
 
 from can_log_parser import CanLogParser
 from frame_selector import FrameSelector
@@ -20,6 +21,23 @@ def run_parser(filename: str, selected_frames, output_file: str = "output.txt"):
 if __name__ == "__main__":
     # Gui
     app = CanParserGui()
+
+    try:
+        response = requests.get('https://zenquotes.io/api/random', timeout = 5)
+        response.raise_for_status()
+
+        try:
+            json_data = response.json()[0] # From some reason API returns list with just one element
+
+            author = json_data.get('a', 'Unknown')
+            quote = json_data.get('q', 'Unknown')
+
+            app.log(f"Quote:\n{quote}\n{author}")
+        except (ValueError, TypeError):
+            app.log(f"Unexpected API quote response")
+
+    except requests.exceptions.RequestException as e:
+        app.log(f"No quote today. Error code {e}.")
 
     # Bind analyze_button to run parser
     def analyze_wrapper():
