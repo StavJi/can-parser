@@ -14,13 +14,14 @@ class BaseFrameHandler:
 
         # Determine if channel is needed or not
         sig = inspect.signature(cls.parser_method)
-        if len(sig.parameters) == 2:
+        if len(sig.parameters) == 2 or len(sig.parameters) == 3:
+            # Do not handle multiframe for now
             frm = cls.parser_method(frame.channel, frame.payload)
         else:
             frm = cls.parser_method(frame.payload)
 
         values = [f"{k}={v}" for k, v in frm.items()]
-        return f"Timestamp={frame.time_s}; Frame={cls.name}; Channel={frame.channel}\n {', '.join(values)}"
+        return f"Timestamp={frame.time_s}; Frame={cls.name}; Channel={frame.channel}\n {'; '.join(values)}"
 
 
 class TmcStatusHandler(BaseFrameHandler):
