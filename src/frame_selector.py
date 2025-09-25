@@ -129,10 +129,22 @@ class FrameSelector:
     ]
 
     @classmethod
-    def select(cls, frame, selected_frames):
+    def select(cls, frame, selected_frames, output_text: bool):
         for handler in cls.HANDLERS:
             if frame.short_id == handler.short_id:
                 key = f"{handler.name}_CH{frame.channel}"
-                if key in selected_frames:
-                    return handler.parse(frame)
+
+                frm = handler.parse(frame)
+
+                if output_text:
+                    if key in selected_frames:
+                        return frm
+                else:
+                    result = {
+                        "Timestamp": frame.time_s,
+                        "Frame": handler.name,
+                        "Channel": frame.channel,
+                        **frm
+                    }
+                    return result
         return None

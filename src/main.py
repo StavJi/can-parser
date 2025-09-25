@@ -1,22 +1,37 @@
 import os
 from gui import CanParserGui
 import requests
+from pathlib import Path
+import pandas as pd
 
 from can_log_parser import CanLogParser
 from frame_selector import FrameSelector
 
-def run_parser(filename: str, selected_frames, output_file: str = "output.txt"):
+def run_parser(filename: str, selected_frames, output_file: str):
     """ Main parsing logic """
     with open(output_file, "w") as f:
+        rows = []
         gen = CanLogParser.generator(filename, CanLogParser.parse_line_h407_logger)
 
         for frame  in gen:
             if not frame.time_s or not frame.short_id:
                 continue
 
-            line = FrameSelector.select(frame, selected_frames)
-            if line:
-                f.write(line + "\n")
+            ext = Path(output_file).suffix.lower()
+
+            if ext == ".txt":
+                line = FrameSelector.select(frame, selected_frames, True)
+                if line:
+                    f.write(line + "\n")
+            elif ext == ".xlsx":
+
+                dictionary = FrameSelector.select(frame, selected_frames, False)
+                if dictionary:
+                    rows.append(dictionary)
+
+        if rows:
+            df = pd.DataFrame(rows)
+            df.to_excel(output_file, index=False)
 
 if __name__ == "__main__":
     # Gui
@@ -53,11 +68,12 @@ if __name__ == "__main__":
         try:
             app.log("Analyzing, please wait...")
             selected_frames = [name for name, var in app.check_vars.items() if var.get()]
-            run_parser(app.filepath, selected_frames)
+            run_parser(app.filepath, selected_frames, "output.txt")
+            #run_parser(app.filepath, selected_frames, "output.xlsx")
             app.log("Parsing done! See output.txt")
-        except Exception as e:
+        except Exception as err:
             # Parsing error
-            app.log(f"Parsing failed:\n{e}")
+            app.log(f"Parsing failed:\n{err}")
 
     app.analyze_button.config(command=analyze_wrapper)
 
