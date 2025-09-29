@@ -6,7 +6,7 @@ class BaseFrameHandler:
 
     short_id: int = None   # CAN frame ID
     name: str = None       # Name in GUI (ACUSTATUS, EMCUSTATUS etc.), but with channel maybe it will cause problems
-    parser_method = None   # Frame parser fuction which parse the frame
+    parser_method = None   # Frame parser function which parse the frame
 
     @classmethod
     def parse(cls, frame):

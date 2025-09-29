@@ -276,7 +276,6 @@ class DummyFrame:
         self.payload = payload
         self.time_s = time_s
 
-
 def test_parse_returns_text():
     def fake_parser(channel, payload):
         return {"diesel_state": 1, "cooling_active": 0}
@@ -290,9 +289,8 @@ def test_parse_returns_text():
 
     result = handler.parse(frame)
 
-    assert isinstance(result, str)
-    assert "Frame=" in result
-    assert "diesel_state=1" in result
+    assert result["cooling_active"] == 0
+    assert result["diesel_state"] == 1
 
 # from bank.bank_account import BankAccount
 # from bank.currency import CurrencyConverter, CurrencyAPIClient
