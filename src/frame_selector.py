@@ -20,9 +20,7 @@ class BaseFrameHandler:
         else:
             frm = cls.parser_method(frame.payload)
 
-        values = [f"{k}={v}" for k, v in frm.items()]
-        return f"Timestamp={frame.time_s}; Frame={cls.name}; Channel={frame.channel}\n {'; '.join(values)}"
-
+        return frm
 
 class TmcStatusHandler(BaseFrameHandler):
     short_id = 0xFF09
@@ -137,9 +135,12 @@ class FrameSelector:
                 frm = handler.parse(frame)
 
                 if output_text:
+                    # Return string
                     if key in selected_frames:
-                        return frm
+                        values = [f"{k}={v}" for k, v in frm.items()]
+                        return f"Timestamp={frame.time_s}; Frame={handler.name}; Channel={frame.channel}\n {'; '.join(values)}"
                 else:
+                    # Return dictionary
                     result = {
                         "Timestamp": frame.time_s,
                         "Frame": handler.name,

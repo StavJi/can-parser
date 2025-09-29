@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, ttk
 import tkinter.font as tk_font
 import configparser
 from frame_selector import FrameSelector
@@ -18,7 +18,7 @@ class CanParserGui:
         self.can_bus_channel_count = config['DEFAULT'].getint('CanBusChannels', fallback = 1)
 
         self.root = tk.Tk()
-        self.root.geometry("700x800")
+        self.root.geometry("700x820")
         self.root.title("CAN bus parser")
 
         btn_font = tk_font.Font(family="Arial", size=12, weight="bold")
@@ -29,6 +29,14 @@ class CanParserGui:
         self.open_button = tk.Button(self.root, text="Open File", font=btn_font, bg=self.button_bg,
                                      fg=self.button_fg, width = 15, command=self.open_file)
         self.open_button.pack(padx = 10 , pady = 10, anchor="w")
+
+        # Output file selector
+        format_frame = tk.LabelFrame(self.root, text="Output format", font=("Arial", 12, "bold"))
+        format_frame.pack(padx=10, pady=5, anchor="w")
+
+        self.output_format = tk.StringVar(value="txt")  # Default txt
+        format_combo = ttk.Combobox(format_frame, textvariable=self.output_format, values=["xlsx", "txt"], state="readonly", width=10)
+        format_combo.pack(padx=5, pady=5)
 
         # Menu
         self.menu_bar = tk.Menu(self.root)
@@ -89,6 +97,9 @@ class CanParserGui:
                               # and after log area is created
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+    def get_output_format(self):
+        return self.output_format.get().strip()
 
     def save_selection(self):
         """ Save selected CAN bus frames """

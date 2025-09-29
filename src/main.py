@@ -68,9 +68,12 @@ if __name__ == "__main__":
         try:
             app.log("Analyzing, please wait...")
             selected_frames = [name for name, var in app.check_vars.items() if var.get()]
-            run_parser(app.filepath, selected_frames, "output.txt")
-            #run_parser(app.filepath, selected_frames, "output.xlsx")
-            app.log("Parsing done! See output.txt")
+
+            ext = app.get_output_format()
+            output_file_name = f"output.{ext}"
+            run_parser(app.filepath, selected_frames, output_file_name)
+
+            app.log(f"Parsing done! See {output_file_name}")
         except Exception as err:
             # Parsing error
             app.log(f"Parsing failed:\n{err}")
