@@ -134,18 +134,18 @@ class FrameSelector:
 
                 frm = handler.parse(frame)
 
-                if output_text:
-                    # Return string
-                    if key in selected_frames:
+                if key in selected_frames:
+                    if output_text:
+                        # Return string
                         values = [f"{k}={v}" for k, v in frm.items()]
                         return f"Timestamp={frame.time_s}; Frame={handler.name}; Channel={frame.channel}\n {'; '.join(values)}"
-                else:
-                    # Return dictionary
-                    result = {
-                        "Timestamp": frame.time_s,
-                        "Frame": handler.name,
-                        "Channel": frame.channel,
-                        **frm
-                    }
-                    return result
+                    else:
+                        # Return dictionary
+                        result = {
+                            "Timestamp": frame.time_s,
+                            "Frame": handler.name,
+                            "Channel": frame.channel,
+                            **frm
+                        }
+                        return result
         return None
