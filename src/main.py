@@ -10,7 +10,7 @@ from frame_selector import FrameSelector
 def run_parser(filename: str, selected_frames, output_file: str):
     """ Main parsing logic """
     with open(output_file, "w") as f:
-        rows = []
+        grouped_rows = { }
         gen = CanLogParser.generator(filename, CanLogParser.parse_line_h407_logger)
 
         for frame  in gen:
@@ -27,11 +27,16 @@ def run_parser(filename: str, selected_frames, output_file: str):
 
                 dictionary = FrameSelector.select(frame, selected_frames, False)
                 if dictionary:
-                    rows.append(dictionary)
+                    frame_type = dictionary["Frame"] # Frame name without channel
+                    if frame_type not in grouped_rows:
+                        grouped_rows[frame_type] = []
+                    grouped_rows[frame_type].append(dictionary)
 
-        if rows:
-            df = pd.DataFrame(rows)
-            df.to_excel(output_file, index=False)
+        if grouped_rows:
+            with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
+                for frame_type, rows in grouped_rows.items():
+                    df = pd.DataFrame(rows)
+                    df.to_excel(writer, sheet_name=frame_type, index=False)
 
 if __name__ == "__main__":
     # Gui
