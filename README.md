@@ -36,27 +36,33 @@ Raw CAN log file (CSV-like), in following format Timestamp [ms], Message ID, Dat
 ```
 
 ### Example Output
-- TBD
- 
+#### *.txt
+```
+Timestamp=000000083718; Frame=TMCSTATUS; Channel=1
+ tmc_state=0; tmc_dt=DATE: 01.09.2025 TIME: 08:30; dplus=1
+Timestamp=000000084021; Frame=ACUSTATUS2; Channel=1
+ acu_supply_1=23.75
+Timestamp=000000084236; Frame=TMCSTATUS; Channel=1
+ tmc_state=0; tmc_dt=DATE: 01.09.2025 TIME: 08:30; dplus=1
+Timestamp=000000084528; Frame=ACUSTATUS2; Channel=1
+ acu_supply_1=23.75
+Timestamp=000000084754; Frame=TMCSTATUS; Channel=1
+```
+#### *.xlsx
+ TBD
 ## Project Structure
 ```
 .
-├── src/             # Source code
 ├── examples/        # Example input files
+├── src/             # Source code
 ├── tests/           # Unit tests
-├── requirements.txt # Project dependencies
 ├── .gitignore
-└── README.md
+├── README.md
+└── requirements.txt # Project dependencies
 ```
 
-## Roadmap
-- [x] First project draft (proof of concept)
-- [ ] Add support for custom CAN message definitions
-- [x] Add oop
-- [x] Add GUI
-      
 ## Current project status
-Make it more useful and less annoying to use
+Refactoring GUI, so it remains responsive and doesn’t hang during long execution.
 
 ## Contributing
 Contributions are welcome! Please fork the repository, create a feature branch, and submit a pull request.
