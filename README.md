@@ -49,7 +49,13 @@ Timestamp=000000084528; Frame=ACUSTATUS2; Channel=1
 Timestamp=000000084754; Frame=TMCSTATUS; Channel=1
 ```
 #### *.xlsx
- TBD
+- One sheet per frame type (e.g., `TMCSTATUS`, `ACUSTATUS2`, …)
+- Each sheet contains rows with parsed frames
+- Columns:
+  - `Timestamp` – time in milliseconds
+  - `Frame` – frame type
+  - `Channel` – channel number
+  - Additional decoded fields (e.g., Speed, Temperature, …).
 ## Project Structure
 ```
 .
