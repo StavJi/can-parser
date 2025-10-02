@@ -4,6 +4,10 @@ from unittest.mock import MagicMock
 from frame_selector import FrameSelector, BaseFrameHandler
 from frame_parser import FrameParser
 
+################################################################################
+# Tests for frame_parser.py
+################################################################################
+
 def test_gen_pwr_state_name():
     assert FrameParser.gen_pwr_state_name(0) == "Off::0"
     assert FrameParser.gen_pwr_state_name(1) == "Starting::1"
@@ -76,6 +80,8 @@ def test_parse_tmc_status2():
     # return {'RTT_timestamp': payload[2] | (payload[3] << 8),  # 3-4 N/A Timestamp (sec)
     #         'TMC_ResetCounter': payload[4] | (payload[5] << 8),  # 5-6 N/A TMC Reset Counter (sec)
     #         'TMC_Watchog_Counter': payload[6] | (payload[7] << 8)}  # 7-8 N/A TMC Watchog Counter (sec)
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    result = FrameParser.parse_tmc_status2(payload)
     pass
 
 def test_parse_tmc_status3():
@@ -107,6 +113,8 @@ def test_parse_tmc_status4():
     #     data[f'Cooler_IsActivated_{i + 1}'] = (payload[i + 4] >> 7) & 0x01
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    result = FrameParser.parse_tmc_status4(payload)
     pass
 
 def test_parse_tmc_status5():
@@ -128,6 +136,8 @@ def test_parse_tmc_status5():
     # for i in range(1, 9):
     #     data[f'pwr_finished_flag_STATE_{i}'] = (finished_flags == i)
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    result = FrameParser.parse_tmc_status5(payload)
     pass
 
 def test_parse_tmc2acu():
@@ -140,6 +150,9 @@ def test_parse_tmc2acu():
     #         f'eng_speed_{channel}': payload[4] | (payload[5] << 8)}  # 5-6 N/A Engine Speed
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_tmc2acu(channel, payload)
     pass
 
 def test_parse_tmc2emcu():
@@ -149,6 +162,9 @@ def test_parse_tmc2emcu():
     #         f'aux_param_{channel}': payload[2]}  # 3 N/A AuxParam
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_tmc2emcu(channel, payload)
     pass
 
 def test_parse_acu_status():
@@ -172,6 +188,9 @@ def test_parse_acu_status2():
     # data = {f'acu_supply_{channel}': payload[1] * 0.125}
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_acu_status2(channel, payload)
     pass
 
 def test_parse_acu_status3():
@@ -190,6 +209,9 @@ def test_parse_acu_status3():
     #         f'dpf_conditions_not_met_{channel}': (payload[7] >> 4) & 0x02}
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_acu_status3(channel, payload)
     pass
 
 def test_parse_acu_engine_status():
@@ -199,6 +221,9 @@ def test_parse_acu_engine_status():
     #         f'diesel_moto_hours_{channel}': payload[4] | (payload[5] << 8) | (payload[6] << 16) | (payload[7] << 24)}  # 5-8 Engine Total Hours of Operation
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_acu_engine_status(channel, payload)
     pass
 
 def test_parse_acu_engine_status2():
@@ -208,6 +233,9 @@ def test_parse_acu_engine_status2():
     #         f'current_diesel_rpm_{channel}': payload[3] | (payload[4] << 8)}  # 4-5 1 rpm /bit, Offset 0
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_acu_engine_status2(channel, payload)
     pass
 
 def test_parse_acu_error():
@@ -221,6 +249,9 @@ def test_parse_acu_error():
     # data[f'Diesel_Trouble_Codes_Total_Num_{channel}'] = payload[2]
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_acu_error(channel, payload)
     pass
 
 def test_parse_parse_emcu_status():
@@ -242,6 +273,9 @@ def test_parse_parse_emcu_status():
     #         f'Door_{channel}': (payload[3] >> 0) & 0x01}
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_emcu_status(channel, payload)
     pass
 
 def test_parse_parse_emcu_error():
@@ -251,6 +285,9 @@ def test_parse_parse_emcu_error():
     #         f'Elmot_Error_{channel}': payload[2] & 0x0F}  # 3-4 Elmot error
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_emcu_error(channel, payload)
     pass
 
 def test_parse_acu_diagnostics2():
@@ -266,8 +303,14 @@ def test_parse_acu_diagnostics2():
     #         f'SRV_SUP_ADC_{channel}': payload[2] | (payload[3] << 8)}
     #
     # return data
+    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = 0
+    result = FrameParser.parse_acu_diagnostics2(channel, payload)
     pass
 
+################################################################################
+# Tests for frame_selector.py
+################################################################################
 # Dummy frame
 class DummyFrame:
     def __init__(self, short_id, channel, payload, time_ms="456"):
@@ -292,9 +335,6 @@ def test_parse_returns_text():
     assert result["cooling_active"] == 0
     assert result["diesel_state"] == 1
 
-################################################################################
-# Tests for frame_selector.py
-################################################################################
 def test_short_ids_are_unique():
     """All handlers must have unique short_id."""
     short_ids = [handler.short_id for handler in FrameSelector.HANDLERS]
@@ -392,6 +432,12 @@ def test_all_handlers_have_short_id_and_name():
 #
 #     result = FrameSelector.select_text(frame, selected)
 #     assert result is None
+
+################################################################################
+# Tests for can_log_parser.py
+################################################################################
+#TODO TBD
+
 
 # from bank.bank_account import BankAccount
 # from bank.currency import CurrencyConverter, CurrencyAPIClient
