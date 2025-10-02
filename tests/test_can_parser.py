@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 
-from frame_selector import FrameSelector
+from frame_selector import FrameSelector, BaseFrameHandler
 from frame_parser import FrameParser
 
 def test_gen_pwr_state_name():
@@ -270,11 +270,11 @@ def test_parse_acu_diagnostics2():
 
 # Dummy frame
 class DummyFrame:
-    def __init__(self, short_id, channel, payload, time_s="123.456"):
+    def __init__(self, short_id, channel, payload, time_ms="456"):
         self.short_id = short_id
         self.channel = channel
         self.payload = payload
-        self.time_s = time_s
+        self.time_ms = time_ms
 
 def test_parse_returns_text():
     def fake_parser(channel, payload):
@@ -291,6 +291,107 @@ def test_parse_returns_text():
 
     assert result["cooling_active"] == 0
     assert result["diesel_state"] == 1
+
+################################################################################
+# Tests for frame_selector.py
+################################################################################
+def test_short_ids_are_unique():
+    """All handlers must have unique short_id."""
+    short_ids = [handler.short_id for handler in FrameSelector.HANDLERS]
+    # Comprehension set
+    duplicates = {sid for sid in short_ids if short_ids.count(sid) > 1}
+    assert not duplicates, f"Duplicate short_id(s) found: {duplicates}"
+
+def test_names_are_unique():
+    """All handlers must have unique name."""
+    names = [handler.name for handler in FrameSelector.HANDLERS]
+    duplicates = {n for n in names if names.count(n) > 1}
+    assert not duplicates, f"Duplicate name(s) found: {duplicates}"
+
+def test_all_handlers_have_short_id_and_name():
+    """Each handler should define short_id and name."""
+    for handler in FrameSelector.HANDLERS:
+        assert handler.short_id is not None, f"{handler.__name__} has no short_id"
+        assert handler.name is not None, f"{handler.__name__} has no name"
+        assert isinstance(handler.short_id, int), f"{handler.__name__} short_id must be int"
+        assert isinstance(handler.name, str), f"{handler.__name__} name must be str"
+
+
+# def test_base_handler_parse_calls_parser():
+#     """BaseFrameHandler.parse should call parser_method with payload."""
+#     mock_parser = MagicMock(return_value={"ok": True})
+#
+#     class DummyHandler(BaseFrameHandler):
+#         parser_method = staticmethod(mock_parser)
+#
+#     frame = DummyFrame(short_id=0x01, payload="abc", channel=0, time_ms="123456")
+#     result = DummyHandler.parse(frame)
+#
+#     assert result == {"ok": True}
+#     mock_parser.assert_called_once_with("abc")
+
+
+# def test_select_dict_returns_expected(monkeypatch):
+#     """Select_dictionary should return dictionary if frame matches and is selected."""
+#     handler = FrameSelector.HANDLERS[0]
+#     handler.short_id = 0xABCD
+#     handler.parse = classmethod(lambda cls, frame: {"Speed": 100})
+#
+#     frame = DummyFrame(short_id=0x234, channel=1, time_ms="123", payload=[0x00])
+#     result = handler.select(frame)
+#     selected = [f"{handler.name}_CH1"]
+#
+#     result = FrameSelector.select_dictionary(frame, selected)
+#
+#     assert isinstance(result, dict)
+#     assert result["Frame"] == handler.name
+#     assert result["Channel"] == 1
+#     assert result["Timestamp"] == 123
+#     assert result["Speed"] == 100
+
+
+# def test_select_dict_returns_none_if_not_selected():
+#     """select_dict should return None if frame is not in selected_frames."""
+#     handler = FrameSelector.HANDLERS[1]
+#     handler.short_id = 0x2222
+#     handler.parse = classmethod(lambda cls, frame: {"X": 1})
+#
+#     frame = DummyFrame(short_id=0x2222, channel=2)
+#     selected = []  # not selected
+#
+#     result = FrameSelector.select_dict(frame, selected)
+#     assert result is None
+#
+#
+# def test_select_text_returns_string():
+#     """select_text should return formatted string if key matches."""
+#     handler = FrameSelector.HANDLERS[2]
+#     handler.short_id = 0x3333
+#     handler.parse = classmethod(lambda cls, frame: {"Temp": 42})
+#
+#     frame = DummyFrame(short_id=0x3333, channel=5, time_s=9.99)
+#     selected = [f"{handler.name}_CH5"]
+#
+#     result = FrameSelector.select_text(frame, selected)
+#
+#     assert isinstance(result, str)
+#     assert "Timestamp=9.99" in result
+#     assert f"Frame={handler.name}" in result
+#     assert "Channel=5" in result
+#     assert "Temp=42" in result
+#
+#
+# def test_select_text_returns_none_if_not_selected():
+#     """select_text should return None if frame is not in selected_frames."""
+#     handler = FrameSelector.HANDLERS[3]
+#     handler.short_id = 0x4444
+#     handler.parse = classmethod(lambda cls, frm: {"Val": 7})
+#
+#     frame = DummyFrame(short_id=0x4444, channel=7, time_s=11.0)
+#     selected = []  # not selected
+#
+#     result = FrameSelector.select_text(frame, selected)
+#     assert result is None
 
 # from bank.bank_account import BankAccount
 # from bank.currency import CurrencyConverter, CurrencyAPIClient
