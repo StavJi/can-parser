@@ -20,12 +20,12 @@ def run_parser(filename: str, selected_frames, output_file: str):
             ext = Path(output_file).suffix.lower()
 
             if ext == ".txt":
-                line = FrameSelector.select(frame, selected_frames, True)
+                line = FrameSelector.select_text(frame, selected_frames)
                 if line:
                     f.write(line + "\n")
             elif ext == ".xlsx":
 
-                dictionary = FrameSelector.select(frame, selected_frames, False)
+                dictionary = FrameSelector.select_dictionary(frame, selected_frames)
                 if dictionary:
                     frame_type = dictionary["Frame"] # Frame name without channel
                     if frame_type not in grouped_rows:

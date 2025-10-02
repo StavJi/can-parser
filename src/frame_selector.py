@@ -127,25 +127,34 @@ class FrameSelector:
     ]
 
     @classmethod
-    def select(cls, frame, selected_frames, output_text: bool):
+    def select_dictionary(cls, frame, selected_frames):
+        """Return parsed frame as dictionary, or None if not in selected_frames"""
         for handler in cls.HANDLERS:
             if frame.short_id == handler.short_id:
                 key = f"{handler.name}_CH{frame.channel}"
-
-                frm = handler.parse(frame)
-
                 if key in selected_frames:
-                    if output_text:
-                        # Return string
-                        values = [f"{k}={v}" for k, v in frm.items()]
-                        return f"Timestamp={frame.time_s}; Frame={handler.name}; Channel={frame.channel}\n {'; '.join(values)}"
-                    else:
-                        # Return dictionary
-                        result = {
-                            "Timestamp": frame.time_s,
-                            "Frame": handler.name,
-                            "Channel": frame.channel,
-                            **frm
-                        }
-                        return result
+                    frm = handler.parse(frame)
+                    return {
+                        "Timestamp": frame.time_s,
+                        "Frame": handler.name,
+                        "Channel": frame.channel,
+                        **frm
+                    }
+        return None
+
+    @classmethod
+    def select_text(cls, frame, selected_frames):
+        """Return parsed frame as formatted string, or None if not in selected_frames"""
+        for handler in cls.HANDLERS:
+            if frame.short_id == handler.short_id:
+                key = f"{handler.name}_CH{frame.channel}"
+                if key in selected_frames:
+                    frm = handler.parse(frame)
+                    values = [f"{k}={v}" for k, v in frm.items()]
+                    return (
+                        f"Timestamp={frame.time_s}; "
+                        f"Frame={handler.name}; "
+                        f"Channel={frame.channel}\n "
+                        f"{'; '.join(values)}"
+                    )
         return None
