@@ -202,127 +202,123 @@ def test_parse_acu_status():
 
 def test_parse_acu_status2():
     # data = {f'acu_supply_{channel}': payload[1] * 0.125}
-    #
-    # return data
-    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    channel = 0
-    result = FrameParser.parse_acu_status2(channel, payload)
-    pass
+
+    payload = [0, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    channel = [1, 2]
+    for ch in channel:
+        result = FrameParser.parse_acu_status2(ch, payload)
+        assert result[f'acu_supply_{ch}'] == payload[1] * 0.125
 
 def test_parse_acu_status3():
-    # data = {f'aftertreatment_diesel_particulate_filter_passive_regeneration_status_{channel}': payload[1] & 0x03,
-    #         f'aftertreatment_diesel_particulate_filter_active_regeneration_status_{channel}': (payload[1] >> 2) & 0x03,
-    #         f'dpf_active_regeneration_inhibited_status_{channel}': payload[2] & 0x03,
-    #         f'dpf_active_regeneration_inhibited_due_to_inhibit_switch_by_CAN_{channel}': (payload[2] >> 2) & 0x03,
-    #         f'dpf_active_regeneration_inhibited_due_to_neutral_{channel}': (payload[3] >> 4) & 0x03,
-    #         f'dpf_active_regeneration_inhibited_due_to_parking_brake_{channel}': payload[4] & 0x03,
-    #         f'dpf_active_regeneration_inhibited_system_fault_{channel}': (payload[4] >> 4) & 0x03,
-    #         f'dpf_active_regeneration_inhibited_system_timeout_{channel}': (payload[4] >> 6) & 0x03,
-    #         f'dpf_active_regeneration_inhibited_system_lockout_{channel}': (payload[5] >> 2) & 0x03,
-    #         f'dpf_active_regeneration_inhibited_engine_not_warmed_up_{channel}': (payload[5] >> 4) & 0x03,
-    #         f'exhaust_high_temperature_lamp_command_{channel}': (payload[6] >> 2) & 0x07,
-    #         f'dpf_active_regeneration_forced_status_{channel}': (payload[6] >> 5) & 0x07,
-    #         f'dpf_conditions_not_met_{channel}': (payload[7] >> 4) & 0x02}
-    #
-    # return data
+    # f'aftertreatment_diesel_particulate_filter_passive_regeneration_status_{channel}': payload[1] & 0x03,
+    # f'aftertreatment_diesel_particulate_filter_active_regeneration_status_{channel}': (payload[1] >> 2) & 0x03,
+    # f'dpf_active_regeneration_inhibited_status_{channel}': payload[2] & 0x03,
+    # f'dpf_active_regeneration_inhibited_due_to_inhibit_switch_by_CAN_{channel}': (payload[2] >> 2) & 0x03,
+
+    # f'dpf_active_regeneration_inhibited_due_to_parking_brake_{channel}': payload[4] & 0x03,
+    # f'dpf_active_regeneration_inhibited_due_to_neutral_{channel}': (payload[3] >> 4) & 0x03,
+    # f'dpf_active_regeneration_inhibited_system_fault_{channel}': (payload[4] >> 4) & 0x03,
+    # f'dpf_active_regeneration_inhibited_system_timeout_{channel}': (payload[4] >> 6) & 0x03,
+    # f'dpf_active_regeneration_inhibited_system_lockout_{channel}': (payload[5] >> 2) & 0x03,
+    # f'dpf_active_regeneration_inhibited_engine_not_warmed_up_{channel}': (payload[5] >> 4) & 0x03,
+    # f'exhaust_high_temperature_lamp_command_{channel}': (payload[6] >> 2) & 0x07,
+    # f'dpf_active_regeneration_forced_status_{channel}': (payload[6] >> 5) & 0x07,
+    # f'dpf_conditions_not_met_{channel}': (payload[7] >> 4) & 0x02}
+
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    channel = 0
-    result = FrameParser.parse_acu_status3(channel, payload)
-    pass
+    channel = [1, 2]
+    for ch in channel:
+        result = FrameParser.parse_acu_status3(ch, payload)
+        #assert result[f'aftertreatment_diesel_particulate_filter_passive_regeneration_status_{ch}']
+        #assert result[f'aftertreatment_diesel_particulate_filter_active_regeneration_status_{ch}']
+        #assert result[f'dpf_active_regeneration_inhibited_status_{ch}']
+        #assert result[f'dpf_active_regeneration_inhibited_due_to_inhibit_switch_by_CAN_{ch}']
+        #assert result[]
+        #assert result[]
+        #assert result[]
+        #assert result[]
 
 def test_parse_acu_engine_status():
-    # data = {f'diesel_torque_{channel}': payload[0] - 125,
-    #         f'diesel_coolant_temp_{channel}': payload[2] - 40,
-    #         # 3 Engine Coolant Temperature (1 deg C/bit, -40 deg C offset)
-    #         f'diesel_moto_hours_{channel}': payload[4] | (payload[5] << 8) | (payload[6] << 16) | (payload[7] << 24)}  # 5-8 Engine Total Hours of Operation
-    #
-    # return data
+    # f'diesel_torque_{channel}': payload[0] - 125,
+    # f'diesel_coolant_temp_{channel}': payload[2] - 40 # 3 Engine Coolant Temperature (1 deg C/bit, -40 deg C offset)
+    # f'diesel_moto_hours_{channel}': payload[4] | (payload[5] << 8) | (payload[6] << 16) | (payload[7] << 24)}  # 5-8 Engine Total Hours of Operation
+
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    channel = 0
-    result = FrameParser.parse_acu_engine_status(channel, payload)
-    pass
+    channel = [1, 2]
+    for ch in channel:
+        result = FrameParser.parse_acu_engine_status(ch, payload)
 
 def test_parse_acu_engine_status2():
-    # data = {f'dpf_time_{channel}': payload[0],
-    #         f'soot_{channel}': payload[1],
-    #         f'ash_{channel}': payload[2],
-    #         f'current_diesel_rpm_{channel}': payload[3] | (payload[4] << 8)}  # 4-5 1 rpm /bit, Offset 0
-    #
-    # return data
+    # f'dpf_time_{channel}': payload[0],
+    # f'soot_{channel}': payload[1],
+    # f'ash_{channel}': payload[2],
+    # f'current_diesel_rpm_{channel}': payload[3] | (payload[4] << 8)}  # 4-5 1 rpm /bit, Offset 0
+
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    channel = 0
-    result = FrameParser.parse_acu_engine_status2(channel, payload)
-    pass
+    channel = [1, 2]
+    for ch in channel:
+        result = FrameParser.parse_acu_engine_status2(ch, payload)
 
 def test_parse_acu_error():
-    # data = {}
-    #
-    # data[f'Acu_Error_{channel}'] = payload[0] & 0x0F
-    # data[f'Cooling_Error_{channel}'] = (payload[0] >> 4) & 0x0F
-    # data[f'Charging_Error_{channel}'] = payload[1] & 0x0F
-    # data[f'Intake_Servo_Error_{channel}'] = (payload[1] >> 4) & 0x01
-    # data[f'Outtake_Servo_Error_{channel}'] = (payload[1] >> 5) & 0x01
-    # data[f'Diesel_Trouble_Codes_Total_Num_{channel}'] = payload[2]
-    #
-    # return data
+    # f'Acu_Error_{channel}' = payload[0] & 0x0F
+    # f'Cooling_Error_{channel}' = (payload[0] >> 4) & 0x0F
+    # f'Charging_Error_{channel}' = payload[1] & 0x0F
+    # f'Intake_Servo_Error_{channel}' = (payload[1] >> 4) & 0x01
+    # f'Outtake_Servo_Error_{channel}' = (payload[1] >> 5) & 0x01
+    # f'Diesel_Trouble_Codes_Total_Num_{channel}' = payload[2]
+
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    channel = 0
-    result = FrameParser.parse_acu_error(channel, payload)
-    pass
+    channel = [1, 2]
+    for ch in channel:
+        result = FrameParser.parse_acu_error(ch, payload)
 
 def test_parse_parse_emcu_status():
-    # data = {f'EMCU_State_{channel}': payload[0] & 0x0F,
-    #         f'Running_{channel}': (payload[0] >> 4) & 0x01,
-    #         f'Charging0_{channel}': (payload[0] >> 5) & 0x01,
-    #         f'Source_Available_{channel}': payload[1] & 0x03,
-    #         f'Charging1_{channel}': (payload[0] >> 7) & 0x01,
-    #         f'Source_Selected_{channel}': (payload[1] >> 2) & 0x03,
-    #         f'Emergency_Run_{channel}': (payload[1] >> 4) & 0x01,
-    #         f'Emergency_Elmot_Block_{channel}': (payload[1] >> 5) & 0x01,
-    #         f'On_Run_{channel}': (payload[1] >> 6) & 0x01,
-    #         f'Bypassed_{channel}': (payload[1] >> 7) & 0x01,
-    #         f'Ok_Softstarter_{channel}': (payload[2] >> 0) & 0x01,
-    #         f'Overload_Softstarter_{channel}': (payload[2] >> 1) & 0x01,
-    #         f'Manual_On_{channel}': (payload[2] >> 2) & 0x01,
-    #         f'Manual_Off_{channel}': (payload[2] >> 3) & 0x01,
-    #         f'Elmot_State_{channel}': (payload[2] >> 4) & 0x0F,
-    #         f'Door_{channel}': (payload[3] >> 0) & 0x01}
-    #
-    # return data
+    # f'EMCU_State_{channel}': payload[0] & 0x0F,
+    # f'Running_{channel}': (payload[0] >> 4) & 0x01,
+    # f'Charging0_{channel}': (payload[0] >> 5) & 0x01,
+    # f'Source_Available_{channel}': payload[1] & 0x03,
+    # f'Charging1_{channel}': (payload[0] >> 7) & 0x01,
+    # f'Source_Selected_{channel}': (payload[1] >> 2) & 0x03,
+    # f'Emergency_Run_{channel}': (payload[1] >> 4) & 0x01,
+    # f'Emergency_Elmot_Block_{channel}': (payload[1] >> 5) & 0x01,
+    # f'On_Run_{channel}': (payload[1] >> 6) & 0x01,
+    # f'Bypassed_{channel}': (payload[1] >> 7) & 0x01,
+    # f'Ok_Softstarter_{channel}': (payload[2] >> 0) & 0x01,
+    # f'Overload_Softstarter_{channel}': (payload[2] >> 1) & 0x01,
+    # f'Manual_On_{channel}': (payload[2] >> 2) & 0x01,
+    # f'Manual_Off_{channel}': (payload[2] >> 3) & 0x01,
+    # f'Elmot_State_{channel}': (payload[2] >> 4) & 0x0F,
+    # f'Door_{channel}': (payload[3] >> 0) & 0x01}
+
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
     channel = 0
     result = FrameParser.parse_emcu_status(channel, payload)
-    pass
 
 def test_parse_parse_emcu_error():
-    # data = {f'Energy_Source_1_Error_{channel}': payload[0] & 0x0F,
-    #         f'Energy_Source_2_Error_{channel}': (payload[0] >> 4) & 0x0F,
-    #         f'Elmot_Charge_Error_{channel}': payload[1] & 0x0F,  # 2.1-2.4 charge error
-    #         f'Elmot_Error_{channel}': payload[2] & 0x0F}  # 3-4 Elmot error
-    #
-    # return data
+    # f'Energy_Source_1_Error_{channel}': payload[0] & 0x0F,
+    # f'Energy_Source_2_Error_{channel}': (payload[0] >> 4) & 0x0F,
+    # f'Elmot_Charge_Error_{channel}': payload[1] & 0x0F,  # 2.1-2.4 charge error
+    # f'Elmot_Error_{channel}': payload[2] & 0x0F}  # 3-4 Elmot error
+
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
     channel = 0
     result = FrameParser.parse_emcu_error(channel, payload)
-    pass
 
 def test_parse_acu_diagnostics2():
-    # data = {f'SRV_ISOLATE_IN_{channel}': (payload[0] >> 0) & 0x01,
-    #         f'SRV_ISOLATE_FB_{channel}': (payload[0] >> 1) & 0x01,
-    #         f'MCU_SRV_SUP_ENA_{channel}': (payload[0] >> 2) & 0x01,
-    #         f'SRV_SUP_ENA_{channel}': (payload[0] >> 3) & 0x01,
-    #         f'MCU_OE1_{channel}': (payload[0] >> 4) & 0x01,
-    #         f'SRV_A_OPEN_DRIVE_{channel}': (payload[0] >> 5) & 0x01,
-    #         f'SRV_B_OPEN_DRIVE_{channel}': (payload[0] >> 6) & 0x01,
-    #         f'SRV_A_DIV_ENA_{channel}': (payload[0] >> 7) & 0x01,
-    #         f'SRV_B_DIV_ENA_{channel}': (payload[1] >> 0) & 0x01,
-    #         f'SRV_SUP_ADC_{channel}': payload[2] | (payload[3] << 8)}
-    #
-    # return data
+    # f'SRV_ISOLATE_IN_{channel}': (payload[0] >> 0) & 0x01,
+    # f'SRV_ISOLATE_FB_{channel}': (payload[0] >> 1) & 0x01,
+    # f'MCU_SRV_SUP_ENA_{channel}': (payload[0] >> 2) & 0x01,
+    # f'SRV_SUP_ENA_{channel}': (payload[0] >> 3) & 0x01,
+    # f'MCU_OE1_{channel}': (payload[0] >> 4) & 0x01,
+    # f'SRV_A_OPEN_DRIVE_{channel}': (payload[0] >> 5) & 0x01,
+    # f'SRV_B_OPEN_DRIVE_{channel}': (payload[0] >> 6) & 0x01,
+    # f'SRV_A_DIV_ENA_{channel}': (payload[0] >> 7) & 0x01,
+    # f'SRV_B_DIV_ENA_{channel}': (payload[1] >> 0) & 0x01,
+    # f'SRV_SUP_ADC_{channel}': payload[2] | (payload[3] << 8)}
+
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
     channel = 0
     result = FrameParser.parse_acu_diagnostics2(channel, payload)
-    pass
 
 ################################################################################
 # Tests for frame_selector.py
