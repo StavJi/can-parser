@@ -77,12 +77,14 @@ def test_parse_tmc_status():
     assert result["dplus"] == 1
 
 def test_parse_tmc_status2():
-    # return {'RTT_timestamp': payload[2] | (payload[3] << 8),  # 3-4 N/A Timestamp (sec)
-    #         'TMC_ResetCounter': payload[4] | (payload[5] << 8),  # 5-6 N/A TMC Reset Counter (sec)
-    #         'TMC_Watchog_Counter': payload[6] | (payload[7] << 8)}  # 7-8 N/A TMC Watchog Counter (sec)
-    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    # 'RTT_timestamp': payload[2] | (payload[3] << 8),  # 3-4 N/A Timestamp (sec)
+    # 'TMC_ResetCounter': payload[4] | (payload[5] << 8),  # 5-6 N/A TMC Reset Counter (sec)
+    # 'TMC_Watchog_Counter': payload[6] | (payload[7] << 8)}  # 7-8 N/A TMC Watchog Counter (sec)
+    payload = [0, 0, 5, 8, 8, 5, 255, 165]  # Test data
     result = FrameParser.parse_tmc_status2(payload)
-    pass
+    assert result['RTT_timestamp'] == 2053
+    assert result['TMC_ResetCounter'] == 1288
+    assert result['TMC_Watchog_Counter'] == 42495
 
 def test_parse_tmc_status3():
     payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
@@ -141,48 +143,62 @@ def test_parse_tmc_status5():
     pass
 
 def test_parse_tmc2acu():
-    # data = {f'tmc_req_{channel}_s': FrameParser.gen_tmc_request((payload[0] >> 0) & 0x0F),  # 1.1-1.4 N/A TMC Request
-    #         f'eng_running_{channel}': (payload[1] >> 0) & 0x01,  # 2.1 N/A Engine running cmd
-    #         f'charging_running_{channel}': (payload[1] >> 1) & 0x01,  # 2.2 N/A Charging running cmd
-    #         f'cooling_running_{channel}': (payload[1] >> 3) & 0x01,  # 2.4 N/A Cooling running cmd
-    #         f'dpf_running_{channel}': (payload[1] >> 4) & 0x01,  # 2.5 N/A DPF running cmd
-    #         f'relief_valve_{channel}': (payload[1] >> 7) & 0x01,  # 2.8 N/A Relief Valve cmd
-    #         f'eng_speed_{channel}': payload[4] | (payload[5] << 8)}  # 5-6 N/A Engine Speed
-    #
-    # return data
-    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    channel = 0
-    result = FrameParser.parse_tmc2acu(channel, payload)
-    pass
+    # 'tmc_req_{channel}_s': FrameParser.gen_tmc_request((payload[0] >> 0) & 0x0F),  # 1.1-1.4 N/A TMC Request
+    # 'eng_running_{channel}': (payload[1] >> 0) & 0x01,  # 2.1 N/A Engine running cmd
+    # 'charging_running_{channel}': (payload[1] >> 1) & 0x01,  # 2.2 N/A Charging running cmd
+    # 'cooling_running_{channel}': (payload[1] >> 3) & 0x01,  # 2.4 N/A Cooling running cmd
+    # 'dpf_running_{channel}': (payload[1] >> 4) & 0x01,  # 2.5 N/A DPF running cmd
+    # 'relief_valve_{channel}': (payload[1] >> 7) & 0x01,  # 2.8 N/A Relief Valve cmd
+    # 'eng_speed_{channel}': payload[4] | (payload[5] << 8)}  # 5-6 N/A Engine Speed
+
+    payload = [5, 173, 0, 0, 128, 10, 0, 0]  # Test data
+    channel = [1, 2]
+
+    for ch in channel:
+        result = FrameParser.parse_tmc2acu(ch, payload)
+        assert result[f'tmc_req_{ch}_s'] == "DCOOL::5"
+        assert result[f'eng_running_{ch}'] == 1
+        assert result[f'charging_running_{ch}'] == 0
+        assert result[f'cooling_running_{ch}'] == 1
+        assert result[f'dpf_running_{ch}'] == 0
+        assert result[f'relief_valve_{ch}'] == 1
+        assert result[f'eng_speed_{ch}'] == 2688
 
 def test_parse_tmc2emcu():
-    # data = {f'energy_source_select_{channel}': payload[1] & 0x03,  # 2.1-2.2 N/A Energy Source Select cmd
-    #         f'elmot_running_{channel}': (payload[1] >> 2) & 0x01,  # 2.3 N/A Elmot running cmd
-    #         f'elmot_charging_running_{channel}': (payload[1] >> 3) & 0x01,  # 2.4 N/A Elmot charging running cmd
-    #         f'aux_param_{channel}': payload[2]}  # 3 N/A AuxParam
-    #
-    # return data
-    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    channel = 0
-    result = FrameParser.parse_tmc2emcu(channel, payload)
-    pass
+    # 'energy_source_select_{channel}': payload[1] & 0x03,  # 2.1-2.2 N/A Energy Source Select cmd
+    # 'elmot_running_{channel}': (payload[1] >> 2) & 0x01,  # 2.3 N/A Elmot running cmd
+    # 'elmot_charging_running_{channel}': (payload[1] >> 3) & 0x01,  # 2.4 N/A Elmot charging running cmd
+    # 'aux_param_{channel}': payload[2]}  # 3 N/A AuxParam
+
+    payload = [0, 6, 45, 0, 0, 0, 0, 0]  # Test data
+    channel = [1, 2]
+    for ch in channel:
+        result = FrameParser.parse_tmc2emcu(ch, payload)
+        assert result[f'energy_source_select_{ch}'] == 2
+        assert result[f'elmot_running_{ch}'] == 1
+        assert result[f'elmot_charging_running_{ch}'] == 0
+        assert result[f'aux_param_{ch}'] == 45
 
 def test_parse_acu_status():
-    # data = {f'diesel_state_{channel}': (payload[0] >> 4) & 0x0F,  # 1.5-1.8 Diesel State
-    #         f'diesel_state_{channel}_s': FrameParser.gen_diesel_state((payload[0] >> 4) & 0x0F),
-    #         f'dpf_state_{channel}_s': FrameParser.gen_dpf_state(payload[1] & 0x0F),
-    #         f'cooling_active_{channel}': (payload[1] >> 6) & 0x01,  # 2.7 Cooling Active
-    #         f'relief_valve_enable_{channel}': (payload[1] >> 7) & 0x01,  # 2.8 Relief Valve Enable
-    #         f'low_pressure_{channel}': (4.375 * (payload[5] / 10.0) - 18.3) / 10.0,
-    #         f'high_pressure_{channel}': (18.75 * (payload[6] / 10.0) - 75) / 10.0}
-    #
-    # return data
+    # 'diesel_state_{channel}': (payload[0] >> 4) & 0x0F,  # 1.5-1.8 Diesel State
+    # 'diesel_state_{channel}_s': FrameParser.gen_diesel_state((payload[0] >> 4) & 0x0F),
+    # 'dpf_state_{channel}_s': FrameParser.gen_dpf_state(payload[1] & 0x0F),
+    # 'cooling_active_{channel}': (payload[1] >> 6) & 0x01,  # 2.7 Cooling Active
+    # 'relief_valve_enable_{channel}': (payload[1] >> 7) & 0x01,  # 2.8 Relief Valve Enable
+    # 'low_pressure_{channel}': (4.375 * (payload[5] / 10.0) - 18.3) / 10.0,
+    # 'high_pressure_{channel}': (18.75 * (payload[6] / 10.0) - 75) / 10.0}
+
     payload = [20, 85, 0, 0, 0, 10, 20, 0] # Test data
-    result = FrameParser.parse_acu_status(1, payload)
-    assert result["diesel_state_1"] == 1
-    assert result["cooling_active_1"] == 1
-    assert "low_pressure_1" in result
-    assert "high_pressure_1" in result
+    channel = [1, 2]
+    for ch in channel:
+        result = FrameParser.parse_acu_status(ch, payload)
+        assert result[f'diesel_state_{ch}'] == 1
+        assert result[f'diesel_state_{ch}_s'] == "STOPPED::1"
+        assert result[f'dpf_state_{ch}_s'] == "DPF_STANDSTILL_REQUIRED_SERVICE::5"
+        assert result[f'cooling_active_{ch}'] == 1
+        assert result[f'relief_valve_enable_{ch}'] == 0
+        assert f"low_pressure_{ch}" in result
+        assert f"high_pressure_{ch}" in result
 
 def test_parse_acu_status2():
     # data = {f'acu_supply_{channel}': payload[1] * 0.125}
