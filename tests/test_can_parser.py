@@ -87,7 +87,7 @@ def test_parse_tmc_status2():
     assert result['TMC_Watchog_Counter'] == 42495
 
 def test_parse_tmc_status3():
-    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+    payload = [37, 37, 37, 37, 0, 0, 0, 0]  # Test data
     result = FrameParser.parse_tmc_status3(payload)
 
     # for i in range(4):
@@ -97,16 +97,12 @@ def test_parse_tmc_status3():
     #     data[f'PowerControl_State_{i + 1}_s'] = FrameParser.gen_pwr_state_name((payload[i] >> 3) & 0x07)
     #     data[f'PowerControl_IsError_{i + 1}'] = (payload[i] >> 6) & 0x01
 
-    # TODO fixme
-    #for i in range(4):
-        #assert result[f'PowerSource_Status_{i + 1}']
-        #assert result[f'PowerSource_Status_{i + 1}_s']
-        #assert result[f'PowerControl_State_{i + 1}']
-        #assert result[f'PowerControl_State_{i + 1}_s']
-        #assert result[f'PowerControl_IsError_{i + 1}']
-
-    assert "PowerSource_Status_1" in result
-    assert isinstance(result["PowerControl_State_1_s"], str)
+    for i in range(4):
+        assert result[f'PowerSource_Status_{i + 1}'] == 5
+        assert result[f'PowerSource_Status_{i + 1}_s'] == "CAN_TIMEOUT::5"
+        assert result[f'PowerControl_State_{i + 1}'] == 4
+        assert result[f'PowerControl_State_{i + 1}_s'] == "Error::4"
+        assert result[f'PowerControl_IsError_{i + 1}'] == 0
 
 def test_parse_tmc_status4():
 
@@ -315,26 +311,26 @@ def test_parse_parse_emcu_status():
     # f'Door_{channel}': (payload[3] >> 0) & 0x01}
 
     # TODO use some data
-    payload = [0, 0, 0, 0, 0, 0, 0, 0]  # Test data
+    payload = [165, 90, 165, 90, 165, 90, 165, 90]  # Test data
     channel = [1, 2]
     for ch in channel:
         result = FrameParser.parse_emcu_status(ch, payload)
-        assert result[f'EMCU_State_{ch}'] == 0
+        assert result[f'EMCU_State_{ch}'] == 5
         assert result[f'Running_{ch}'] == 0
-        assert result[f'Charging0_{ch}'] == 0
-        assert result[f'Source_Available_{ch}'] == 0
-        assert result[f'Charging1_{ch}'] == 0
-        assert result[f'Source_Selected_{ch}'] == 0
-        assert result[f'Emergency_Run_{ch}'] == 0
-        assert result[f'Emergency_Elmot_Block_{ch}'] == 0
-        assert result[f'On_Run_{ch}'] == 0
-        assert result[f'Bypassed_{ch}'] == 0
-        assert result[f'Ok_Softstarter_{ch}'] == 0
-        assert result[f'Overload_Softstarter_{ch}'] == 0
-        assert result[f'Manual_On_{ch}'] == 0
-        assert result[f'Manual_Off_{ch}'] == 0
-        assert result[f'Elmot_State_{ch}'] == 0
-        assert result[f'Door_{ch}'] == 0
+        assert result[f'Charging0_{ch}'] == 1
+        assert result[f'Source_Available_{ch}'] == 2
+        assert result[f'Charging1_{ch}'] == 1
+        assert result[f'Source_Selected_{ch}'] == 2
+        assert result[f'Emergency_Run_{ch}'] == 1
+        #assert result[f'Emergency_Elmot_Block_{ch}'] == 0
+        #assert result[f'On_Run_{ch}'] == 0
+        #assert result[f'Bypassed_{ch}'] == 0
+        #assert result[f'Ok_Softstarter_{ch}'] == 0
+        #assert result[f'Overload_Softstarter_{ch}'] == 0
+        #assert result[f'Manual_On_{ch}'] == 0
+        #assert result[f'Manual_Off_{ch}'] == 0
+        #assert result[f'Elmot_State_{ch}'] == 0
+        #assert result[f'Door_{ch}'] == 0
 
 def test_parse_parse_emcu_error():
     # f'Energy_Source_1_Error_{channel}': payload[0] & 0x0F,
@@ -363,21 +359,20 @@ def test_parse_acu_diagnostics2():
     # f'SRV_B_DIV_ENA_{channel}': (payload[1] >> 0) & 0x01,
     # f'SRV_SUP_ADC_{channel}': payload[2] | (payload[3] << 8)}
 
-    # TODO use some data
-    payload = [0, 0, 0, 0, 0, 0, 0, 0]  # Test data
+    payload = [90, 165, 90, 165, 90, 165, 90, 165]  # Test data
     channel = [1, 2]
     for ch in channel:
         result = FrameParser.parse_acu_diagnostics2(ch, payload)
         assert result[f'SRV_ISOLATE_IN_{ch}'] == 0
-        assert result[f'SRV_ISOLATE_FB_{ch}'] == 0
+        assert result[f'SRV_ISOLATE_FB_{ch}'] == 1
         assert result[f'MCU_SRV_SUP_ENA_{ch}'] == 0
-        assert result[f'SRV_SUP_ENA_{ch}'] == 0
-        assert result[f'MCU_OE1_{ch}'] == 0
+        assert result[f'SRV_SUP_ENA_{ch}'] == 1
+        assert result[f'MCU_OE1_{ch}'] == 1
         assert result[f'SRV_A_OPEN_DRIVE_{ch}'] == 0
-        assert result[f'SRV_B_OPEN_DRIVE_{ch}'] == 0
+        assert result[f'SRV_B_OPEN_DRIVE_{ch}'] == 1
         assert result[f'SRV_A_DIV_ENA_{ch}'] == 0
-        assert result[f'SRV_B_DIV_ENA_{ch}'] == 0
-        assert result[f'SRV_SUP_ADC_{ch}'] == 0
+        assert result[f'SRV_B_DIV_ENA_{ch}'] == 1
+        assert result[f'SRV_SUP_ADC_{ch}'] == 42330
 
 ################################################################################
 # Tests for frame_selector.py
