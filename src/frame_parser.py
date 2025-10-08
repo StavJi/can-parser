@@ -117,7 +117,6 @@ class FrameParser:
             data[f'Charger_State_{i + 1}_s'] = FrameParser.gen_load_states(payload[i] & 0x07)
             data[f'Charger_IsError_{i + 1}'] = (payload[i] >> 6) & 0x01
             data[f'Charger_IsActivated_{i + 1}'] = (payload[i] >> 7) & 0x01
-
             data[f'Cooler_State_{i + 1}'] = payload[i + 4] & 0x07
             data[f'Cooler_State_{i + 1}_s'] = FrameParser.gen_load_states(payload[i + 4] & 0x07)
             data[f'Cooler_IsError_{i + 1}'] = (payload[i + 4] >> 6) & 0x01

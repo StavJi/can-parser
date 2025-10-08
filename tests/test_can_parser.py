@@ -106,44 +106,75 @@ def test_parse_tmc_status3():
 
 def test_parse_tmc_status4():
 
-    # for i in range(4):
     #     data[f'Charger_State_{i + 1}'] = payload[i] & 0x07
     #     data[f'Charger_State_{i + 1}_s'] = FrameParser.gen_load_states(payload[i] & 0x07)
     #     data[f'Charger_IsError_{i + 1}'] = (payload[i] >> 6) & 0x01
     #     data[f'Charger_IsActivated_{i + 1}'] = (payload[i] >> 7) & 0x01
-    #
     #     data[f'Cooler_State_{i + 1}'] = payload[i + 4] & 0x07
     #     data[f'Cooler_State_{i + 1}_s'] = FrameParser.gen_load_states(payload[i + 4] & 0x07)
     #     data[f'Cooler_IsError_{i + 1}'] = (payload[i + 4] >> 6) & 0x01
     #     data[f'Cooler_IsActivated_{i + 1}'] = (payload[i + 4] >> 7) & 0x01
-    #
-    # return data
-    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
-    result = FrameParser.parse_tmc_status4(payload)
 
+    payload = [90, 90, 90, 90, 90, 90, 90, 90]  # Test data
+    result = FrameParser.parse_tmc_status4(payload)
+    for i in range(4):
+        assert result[f'Charger_State_{i + 1}'] == 2
+        assert result[f'Charger_State_{i + 1}_s'] == "Unloading::2"
+        assert result[f'Charger_IsError_{i + 1}'] == 1
+        assert result[f'Charger_IsActivated_{i + 1}'] == 0
+        assert result[f'Cooler_State_{i + 1}'] == 2
+        assert result[f'Cooler_State_{i + 1}_s'] == "Unloading::2"
+        assert result[f'Cooler_IsError_{i + 1}'] == 1
+        assert result[f'Cooler_IsActivated_{i + 1}'] == 0
 
 def test_parse_tmc_status5():
-    # data = {'charg_req': payload[0] & 0x01,  # 1.1 Charging Required
-    #         'cool_req': (payload[0] >> 1) & 0x01,  # 1.2 Cooling Required
-    #         'boost_req': (payload[0] >> 2) & 0x01,  # 1.3 Boost Requested
-    #         'read_chrg_state': (payload[0] >> 3) & 0x01,  # 1.4 Read Charging State
-    #         'pwr_finished_flags': (payload[0] >> 4) & 0x0F,  # 1.5-1.8 PwrMng Finished Flags
-    #         'run_1_id': payload[5] & 0x07,  # 6.1-3 UnitId
-    #         'run_1_charging_assigned': (payload[5] >> 3) & 0x01,  # 6.4 charging_assigned
-    #         'run_1_cooling_assigned': (payload[5] >> 4) & 0x01,  # 6.5 cooling_assigned
-    #         'run_2_id': payload[6] & 0x07,  # 7.1-3 UnitId
-    #         'run_2_charging_assigned': (payload[6] >> 3) & 0x01,  # 7.4 charging_assigned
-    #         'run_2_cooling_assigned': (payload[6] >> 4) & 0x01,  # 7.5 cooling_assigned
-    #         'run_3_id': payload[7] & 0x07,  # 7.1-3 UnitId
-    #         'run_3_charging_assigned': (payload[7] >> 3) & 0x01,  # 7.4 charging_assigned
-    #         'run_3_cooling_assigned': (payload[7] >> 4) & 0x01}  # 6-8.5 cooling_assigned
+    # 'charg_req': payload[0] & 0x01,  # 1.1 Charging Required
+    # 'cool_req': (payload[0] >> 1) & 0x01,  # 1.2 Cooling Required
+    # 'boost_req': (payload[0] >> 2) & 0x01,  # 1.3 Boost Requested
+    # 'read_chrg_state': (payload[0] >> 3) & 0x01,  # 1.4 Read Charging State
+    # 'pwr_finished_flags': (payload[0] >> 4) & 0x0F,  # 1.5-1.8 PwrMng Finished Flags
+    # 'run_1_id': payload[5] & 0x07,  # 6.1-3 UnitId
+    # 'run_1_charging_assigned': (payload[5] >> 3) & 0x01,  # 6.4 charging_assigned
+    # 'run_1_cooling_assigned': (payload[5] >> 4) & 0x01,  # 6.5 cooling_assigned
+    # 'run_2_id': payload[6] & 0x07,  # 7.1-3 UnitId
+    # 'run_2_charging_assigned': (payload[6] >> 3) & 0x01,  # 7.4 charging_assigned
+    # 'run_2_cooling_assigned': (payload[6] >> 4) & 0x01,  # 7.5 cooling_assigned
+    # 'run_3_id': payload[7] & 0x07,  # 7.1-3 UnitId
+    # 'run_3_charging_assigned': (payload[7] >> 3) & 0x01,  # 7.4 charging_assigned
+    # 'run_3_cooling_assigned': (payload[7] >> 4) & 0x01}  # 6-8.5 cooling_assigned
+    #
     # finished_flags = (payload[0] >> 4) & 0x0F
     # for i in range(1, 9):
     #     data[f'pwr_finished_flag_STATE_{i}'] = (finished_flags == i)
     # return data
-    payload = [5, 80, 0, 0, 0, 0, 0, 0]  # Test data
+
+    payload = [165, 90, 165, 90, 165, 90, 165, 90]  # Test data
     result = FrameParser.parse_tmc_status5(payload)
-    pass
+
+    assert result['charg_req'] == 1
+    assert result['cool_req'] == 0
+    assert result['boost_req'] == 1
+    assert result['read_chrg_state'] == 0
+    assert result['pwr_finished_flags'] == 10
+    assert result['run_1_id'] == 2
+    assert result['run_1_charging_assigned'] == 1
+    assert result['run_1_cooling_assigned'] == 1
+    assert result['run_2_id'] == 5
+    assert result['run_2_charging_assigned'] == 0
+    assert result['run_2_cooling_assigned'] == 0
+    assert result['run_3_id'] == 2
+    assert result['run_3_charging_assigned'] == 1
+    assert result['run_3_cooling_assigned'] == 1
+
+    #finished_flags = (payload[0] >> 4) & 0x0F
+    # print(f"finished_flags = {finished_flags:04b}")
+    # for i in range(4):
+    #     print(f"STATE_{i + 1}: bit {(1 << i):04b} → {bool(finished_flags & (1 << i))}")
+
+
+    #for i in range(4):
+    #    print(result)
+    #    assert result[f'pwr_finished_flag_STATE_{i + 1}'] == bool(finished_flags & (1 << i))
 
 def test_parse_tmc2acu():
     # 'tmc_req_{channel}_s': FrameParser.gen_tmc_request((payload[0] >> 0) & 0x0F),  # 1.1-1.4 N/A TMC Request
@@ -322,15 +353,15 @@ def test_parse_parse_emcu_status():
         assert result[f'Charging1_{ch}'] == 1
         assert result[f'Source_Selected_{ch}'] == 2
         assert result[f'Emergency_Run_{ch}'] == 1
-        #assert result[f'Emergency_Elmot_Block_{ch}'] == 0
-        #assert result[f'On_Run_{ch}'] == 0
-        #assert result[f'Bypassed_{ch}'] == 0
-        #assert result[f'Ok_Softstarter_{ch}'] == 0
-        #assert result[f'Overload_Softstarter_{ch}'] == 0
-        #assert result[f'Manual_On_{ch}'] == 0
-        #assert result[f'Manual_Off_{ch}'] == 0
-        #assert result[f'Elmot_State_{ch}'] == 0
-        #assert result[f'Door_{ch}'] == 0
+        assert result[f'Emergency_Elmot_Block_{ch}'] == 0
+        assert result[f'On_Run_{ch}'] == 1
+        assert result[f'Bypassed_{ch}'] == 0
+        assert result[f'Ok_Softstarter_{ch}'] == 1
+        assert result[f'Overload_Softstarter_{ch}'] == 0
+        assert result[f'Manual_On_{ch}'] == 1
+        assert result[f'Manual_Off_{ch}'] == 0
+        assert result[f'Elmot_State_{ch}'] == 10
+        assert result[f'Door_{ch}'] == 0
 
 def test_parse_parse_emcu_error():
     # f'Energy_Source_1_Error_{channel}': payload[0] & 0x0F,
@@ -503,46 +534,3 @@ def test_all_handlers_have_short_id_and_name():
 # Tests for can_log_parser.py
 ################################################################################
 #TODO TBD
-
-
-# from bank.bank_account import BankAccount
-# from bank.currency import CurrencyConverter, CurrencyAPIClient
-#
-# from unittest.mock import MagicMock
-#
-# @pytest.fixture
-# def converter_fixture():
-#     mocked_client = MagicMock(spec=CurrencyAPIClient)
-#     mocked_client.get_rate.return_value = 28
-#     return CurrencyConverter(api_client=mocked_client)
-#
-# @pytest.fixture
-# def bank_account_with_bonus(converter_fixture):
-#     bank_account = BankAccount(name="your name",
-#                                  currency="CZK",
-#                                  currency_converter=converter_fixture,
-#                                  bonus=100)
-#     return bank_account
-#
-# @pytest.fixture
-# def bank_account_without_bonus(converter_fixture):
-#     bank_account = BankAccount(name="your name",
-#                                  currency="CZK",
-#                                  currency_converter=converter_fixture)
-#     return bank_account
-#
-# def test_bonus_no_bonus_account(bank_account_without_bonus):
-#     assert bank_account_without_bonus.get_balance() == 0
-#
-# def test_bonus_account(bank_account_with_bonus):
-#     assert bank_account_with_bonus.get_balance() == 100
-#
-#
-# def test_withdrawal_same_currency(bank_account_with_bonus):
-#     bank_account_with_bonus.withdraw(10, "CZK")
-#     assert bank_account_with_bonus.get_balance() == 90
-#
-#
-# def test_withdrawal_different_currency(bank_account_with_bonus):
-#     bank_account_with_bonus.withdraw(2, "EUR")
-#     assert bank_account_with_bonus.get_balance() == 44
