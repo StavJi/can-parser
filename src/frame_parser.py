@@ -141,9 +141,6 @@ class FrameParser:
                 'run_3_id': payload[7] & 0x07, # 7.1-3 UnitId
                 'run_3_charging_assigned': (payload[7] >> 3) & 0x01, # 7.4 charging_assigned
                 'run_3_cooling_assigned': (payload[7] >> 4) & 0x01} # 6-8.5 cooling_assigned
-        finished_flags = (payload[0] >> 4) & 0x0F
-        for i in range(1, 9):
-            data[f'pwr_finished_flag_STATE_{i}'] = (finished_flags == i)
         return data
 
     @staticmethod

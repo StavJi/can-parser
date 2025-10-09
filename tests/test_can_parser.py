@@ -1,8 +1,7 @@
-import pytest
-from unittest.mock import MagicMock
-
-from frame_selector import FrameSelector, BaseFrameHandler
+from can_log_parser import CanLogParser, CanFrame
+from frame_selector import FrameSelector
 from frame_parser import FrameParser
+from datetime import datetime
 
 ################################################################################
 # Tests for frame_parser.py
@@ -142,11 +141,6 @@ def test_parse_tmc_status5():
     # 'run_3_id': payload[7] & 0x07,  # 7.1-3 UnitId
     # 'run_3_charging_assigned': (payload[7] >> 3) & 0x01,  # 7.4 charging_assigned
     # 'run_3_cooling_assigned': (payload[7] >> 4) & 0x01}  # 6-8.5 cooling_assigned
-    #
-    # finished_flags = (payload[0] >> 4) & 0x0F
-    # for i in range(1, 9):
-    #     data[f'pwr_finished_flag_STATE_{i}'] = (finished_flags == i)
-    # return data
 
     payload = [165, 90, 165, 90, 165, 90, 165, 90]  # Test data
     result = FrameParser.parse_tmc_status5(payload)
@@ -165,16 +159,6 @@ def test_parse_tmc_status5():
     assert result['run_3_id'] == 2
     assert result['run_3_charging_assigned'] == 1
     assert result['run_3_cooling_assigned'] == 1
-
-    #finished_flags = (payload[0] >> 4) & 0x0F
-    # print(f"finished_flags = {finished_flags:04b}")
-    # for i in range(4):
-    #     print(f"STATE_{i + 1}: bit {(1 << i):04b} → {bool(finished_flags & (1 << i))}")
-
-
-    #for i in range(4):
-    #    print(result)
-    #    assert result[f'pwr_finished_flag_STATE_{i + 1}'] == bool(finished_flags & (1 << i))
 
 def test_parse_tmc2acu():
     # 'tmc_req_{channel}_s': FrameParser.gen_tmc_request((payload[0] >> 0) & 0x0F),  # 1.1-1.4 N/A TMC Request
@@ -341,7 +325,6 @@ def test_parse_parse_emcu_status():
     # f'Elmot_State_{channel}': (payload[2] >> 4) & 0x0F,
     # f'Door_{channel}': (payload[3] >> 0) & 0x01}
 
-    # TODO use some data
     payload = [165, 90, 165, 90, 165, 90, 165, 90]  # Test data
     channel = [1, 2]
     for ch in channel:
@@ -453,84 +436,57 @@ def test_all_handlers_have_short_id_and_name():
         assert isinstance(handler.short_id, int), f"{handler.__name__} short_id must be int"
         assert isinstance(handler.name, str), f"{handler.__name__} name must be str"
 
-
-# def test_base_handler_parse_calls_parser():
-#     """BaseFrameHandler.parse should call parser_method with payload."""
-#     mock_parser = MagicMock(return_value={"ok": True})
-#
-#     class DummyHandler(BaseFrameHandler):
-#         parser_method = staticmethod(mock_parser)
-#
-#     frame = DummyFrame(short_id=0x01, payload="abc", channel=0, time_ms="123456")
-#     result = DummyHandler.parse(frame)
-#
-#     assert result == {"ok": True}
-#     mock_parser.assert_called_once_with("abc")
-
-
-# def test_select_dict_returns_expected(monkeypatch):
-#     """Select_dictionary should return dictionary if frame matches and is selected."""
-#     handler = FrameSelector.HANDLERS[0]
-#     handler.short_id = 0xABCD
-#     handler.parse = classmethod(lambda cls, frame: {"Speed": 100})
-#
-#     frame = DummyFrame(short_id=0x234, channel=1, time_ms="123", payload=[0x00])
-#     result = handler.select(frame)
-#     selected = [f"{handler.name}_CH1"]
-#
-#     result = FrameSelector.select_dictionary(frame, selected)
-#
-#     assert isinstance(result, dict)
-#     assert result["Frame"] == handler.name
-#     assert result["Channel"] == 1
-#     assert result["Timestamp"] == 123
-#     assert result["Speed"] == 100
-
-
-# def test_select_dict_returns_none_if_not_selected():
-#     """select_dict should return None if frame is not in selected_frames."""
-#     handler = FrameSelector.HANDLERS[1]
-#     handler.short_id = 0x2222
-#     handler.parse = classmethod(lambda cls, frame: {"X": 1})
-#
-#     frame = DummyFrame(short_id=0x2222, channel=2)
-#     selected = []  # not selected
-#
-#     result = FrameSelector.select_dict(frame, selected)
-#     assert result is None
-#
-#
-# def test_select_text_returns_string():
-#     """select_text should return formatted string if key matches."""
-#     handler = FrameSelector.HANDLERS[2]
-#     handler.short_id = 0x3333
-#     handler.parse = classmethod(lambda cls, frame: {"Temp": 42})
-#
-#     frame = DummyFrame(short_id=0x3333, channel=5, time_s=9.99)
-#     selected = [f"{handler.name}_CH5"]
-#
-#     result = FrameSelector.select_text(frame, selected)
-#
-#     assert isinstance(result, str)
-#     assert "Timestamp=9.99" in result
-#     assert f"Frame={handler.name}" in result
-#     assert "Channel=5" in result
-#     assert "Temp=42" in result
-#
-#
-# def test_select_text_returns_none_if_not_selected():
-#     """select_text should return None if frame is not in selected_frames."""
-#     handler = FrameSelector.HANDLERS[3]
-#     handler.short_id = 0x4444
-#     handler.parse = classmethod(lambda cls, frm: {"Val": 7})
-#
-#     frame = DummyFrame(short_id=0x4444, channel=7, time_s=11.0)
-#     selected = []  # not selected
-#
-#     result = FrameSelector.select_text(frame, selected)
-#     assert result is None
-
 ################################################################################
 # Tests for can_log_parser.py
 ################################################################################
 #TODO TBD
+
+def test_extract_escaped_simple():
+    # FE must be removed
+    assert CanLogParser.extract_escaped("FE10A0") == "10A0"
+
+def test_extract_escaped_no_escape():
+    # input and output must be equal
+    assert CanLogParser.extract_escaped("123321") == "123321"
+
+def test_extract_escaped_multiple():
+    # FE must be removed
+    assert CanLogParser.extract_escaped("AAFE20FEFEEE") == "AA20FEEE"
+
+def test_parse_line_ras():
+    line = "RAS: 3 AABBCC"
+    frame = CanLogParser.parse_line_h407_logger(line)
+    assert isinstance(frame, CanFrame)
+    assert frame.payload == [0xAA, 0xBB, 0xCC]
+
+def test_parse_line_hmi():
+    line = "HMI: 1 00 FEAA10"
+    frame = CanLogParser.parse_line_h407_logger(line)
+    assert frame.payload == [0xAA, 0x10]
+
+def test_parse_line_can():
+    line = "12345 18FF09AA 8 1122334455667788 CH=1"
+    frame = CanLogParser.parse_line_h407_logger(line)
+    assert frame.frame_id == 0x18FF09AA
+    assert frame.short_id == 0xFF09
+    assert frame.channel == "1"
+    assert frame.payload == [0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]
+
+def test_timestamp_begin_of_file(tmp_path):
+    test_file = tmp_path / "log.txt"
+    test_file.write_text("#timestamp 1728000000\n")
+    ts = CanLogParser.timestamp_begin_of_file(str(test_file))
+    assert isinstance(ts, datetime)
+    assert abs(ts.timestamp() - 1728000) < 10
+
+def test_generator_parses_only_valid_lines(tmp_path):
+    test_file = tmp_path / "log.txt"
+    test_file.write_text("""
+#timestamp 123456789
+12345 18FF09AA 8 1122334455667788 CH=1
+# comment
+RAS: 3 AABBCC
+""")
+    frames = list(CanLogParser.generator(test_file, CanLogParser.parse_line_h407_logger))
+    assert len(frames) == 2 # Two messages in frame
+    assert all(isinstance(f, CanFrame) for f in frames)
