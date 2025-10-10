@@ -151,3 +151,36 @@ class CanParserGui:
                                                     filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
         if self.filepath:
             self.log(f"Selected file: {self.filepath}")
+
+    def disable_all_widgets(self):
+        """Disable all widgets"""
+        widgets: list[tk.Widget] = [self.open_button, self.analyze_button]
+
+        for child in self.root.winfo_children():
+            if isinstance(child, tk.Entry):
+                widgets.append(child)
+
+        # Disable buttons and checkbox
+        for widget in self.root.winfo_children():
+            self.set_state_recursive(widget, "disabled")
+
+        # Disable menu
+        self.file_menu.entryconfig("Close", state="disabled")
+        self.action_menu.entryconfig("About", state="disabled")
+
+    def enable_all_widgets(self):
+        """Enable all widgets"""
+        for widget in self.root.winfo_children():
+            self.set_state_recursive(widget, "normal")
+
+        # Enable menu
+        self.file_menu.entryconfig("Close", state="normal")
+        self.action_menu.entryconfig("About", state="normal")
+
+    def set_state_recursive(self, widget, state):
+        try:
+            widget.configure(state=state)
+        except tk.TclError:
+            pass  # Widget without state
+        for child in widget.winfo_children():
+            self.set_state_recursive(child, state)

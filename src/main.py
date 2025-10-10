@@ -1,4 +1,5 @@
 import os
+import threading
 from gui import CanParserGui
 import requests
 from pathlib import Path
@@ -70,18 +71,25 @@ if __name__ == "__main__":
             app.log(f"File does not exist:\n{app.filepath}")
             return
 
-        try:
-            app.log("Analyzing, please wait...")
-            selected_frames = [name for name, var in app.check_vars.items() if var.get()]
+        def worker():
+            try:
+                app.disable_all_widgets()
+                app.log("Analyzing, please wait...")
+                selected_frames = [name for name, var in app.check_vars.items() if var.get()]
 
-            ext = app.get_output_format()
-            output_file_name = f"output.{ext}"
-            run_parser(app.filepath, selected_frames, output_file_name)
+                ext = app.get_output_format()
+                output_file_name = f"output.{ext}"
+                run_parser(app.filepath, selected_frames, output_file_name)
 
-            app.log(f"Parsing done! See {output_file_name}")
-        except Exception as err:
-            # Parsing error
-            app.log(f"Parsing failed:\n{err}")
+                app.log(f"Parsing done! See {output_file_name}")
+            except Exception as err:
+                # Parsing error
+                app.log(f"Parsing failed:\n{err}")
+            finally:
+                app.enable_all_widgets()
+
+        # Run parser in new thread
+        threading.Thread(target=worker, daemon=True).start()
 
     app.analyze_button.config(command=analyze_wrapper)
 
