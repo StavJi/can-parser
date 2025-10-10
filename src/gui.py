@@ -4,9 +4,12 @@ import tkinter.font as tk_font
 import configparser
 from frame_selector import FrameSelector
 
+VERSION = "1.00"
+
 def show_about():
     messagebox.showinfo("About","CAN Bus parser developed in 2025.\n"
-                                             "Final project of the Python Developer course.")
+                                             "Final project of the Python Developer course.\n\n"
+                                             f"Version {VERSION} ")
 
 class CanParserGui:
     def __init__(self):
