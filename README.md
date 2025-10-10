@@ -5,7 +5,6 @@ It is designed to help developers and engineers analyze raw CAN traffic, decode 
 ## Features
 - Load CAN bus data from files
 - Parse raw frames into structured messages
-- Support for customizable message definitions
 
 ## Getting Started
 
@@ -23,6 +22,19 @@ It is designed to help developers and engineers analyze raw CAN traffic, decode 
    python src/main.py
 - Select file to parse
 - Enjoy!
+
+## Customizing for Your Own CAN Messages
+By default, this parser is configured to decode a specific set of J1939 message frames.
+
+If you want to parse **your own custom CAN messages**, you will need to modify:
+
+- `can_log_parser.py` – defines how a single CAN line is read and converted into a frame object  
+- `frame_selector.py` – defines which frames are recognized, how they are named, and how their data fields are decoded  
+
+Each CAN message type is handled by a dedicated "frame handler" inside `FrameSelector.HANDLERS`.  
+To add your own frames:
+1. Create a new handler function or class that describes how to interpret your message data bytes.
+2. Register it inside `FrameSelector.HANDLERS`.
 
 ### Example Input
 Raw CAN log file (CSV-like), in following format Timestamp [ms], Message ID, Data lenght, Can bus data, Channel:
@@ -66,9 +78,6 @@ Timestamp=000000084754; Frame=TMCSTATUS; Channel=1
 ├── README.md
 └── requirements.txt # Project dependencies
 ```
-
-## Current project status
-Refactoring GUI, so it remains responsive and doesn’t hang during long execution.
 
 ## Contributing
 Contributions are welcome! Please fork the repository, create a feature branch, and submit a pull request.
