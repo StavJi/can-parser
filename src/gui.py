@@ -1,3 +1,5 @@
+import os
+import sys
 import tkinter as tk
 from tkinter import messagebox, filedialog, ttk
 import tkinter.font as tk_font
@@ -14,7 +16,7 @@ def show_about():
 class CanParserGui:
     def __init__(self):
         self.filepath = None  # File path selected by user
-        self.config_path = "config/cfg.ini"
+        self.config_path = self.resource_path("config/cfg.ini")
 
         config = configparser.ConfigParser()
         config.read(self.config_path)
@@ -44,7 +46,7 @@ class CanParserGui:
         # Menu
         self.menu_bar = tk.Menu(self.root)
         self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.file_menu.add_command(label="Close", command=exit)
+        self.file_menu.add_command(label="Close", command=self.root.destroy)
 
         self.action_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.action_menu.add_command(label='About', command=show_about)
@@ -187,3 +189,12 @@ class CanParserGui:
             pass  # Widget without state
         for child in widget.winfo_children():
             self.set_state_recursive(child, state)
+
+    @staticmethod
+    def resource_path(relative_path):
+        """Return path to resource even when running from exe"""
+        try:
+            base_path = sys._MEIPASS  # PyInstaller temp folder
+        except AttributeError:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
