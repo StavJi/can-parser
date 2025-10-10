@@ -22,7 +22,7 @@ class CanParserGui:
 
         self.root = tk.Tk()
         self.root.geometry("700x820")
-        self.root.title("CAN bus parser")
+        self.root.title(f"CAN bus parser - v{VERSION}")
 
         btn_font = tk_font.Font(family="Arial", size=12, weight="bold")
         self.button_bg = "#55165E"  # Purple background
