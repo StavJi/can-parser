@@ -38,13 +38,14 @@ To add your own frames:
 
 ## Building the EXE
 To create a standalone Windows executable (`.exe`) of this application using **PyInstaller**, run the following command from the root of the project:
-    ```bash
-    pyinstaller --noconsole --onefile --name "CanParser" src/main.py --add-data "src/config/cfg.ini;config"
-
+    
+```bash
+pyinstaller --noconsole --onefile --name "CanParser" src/main.py --add-data "src/config/cfg.ini;config"
+```
 Do not forget to install **PyInstaller**
-    ```bash
-    pip install -r requirements.txt
-
+```bash
+pip install pyinstaller
+```
 ### Example Input
 Raw CAN log file (CSV-like), in following format Timestamp [ms], Message ID, Data lenght, Can bus data, Channel:
 
